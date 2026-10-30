@@ -92,7 +92,7 @@ html[data-theme="light"] #message{color:#15803d}
 </style>
 </head>
 <body><main class="wrap">
-<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 56 · Automatische Zwischenspeicherung</p>
+<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 57 · Automatische Zwischenspeicherung</p>
 <nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingsplan</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingsplan</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Trainingskalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt & Rekorde</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
 <div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2>🏋️ Nächstes Training · <span id="sessionPlanLabel"></span></h2><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div>Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="workoutEndBar" class="workout-bar"><button id="endWorkout" class="danger" disabled>■ Training beenden</button><div>Trainingszeit: <strong id="workoutBottomClock">00:00:00</strong></div></div><p id="workoutStatus" class="tiny" role="status"></p><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession">Alle ausgefüllten Sätze speichern</button></div><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
 <div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper- und Unterkörperplan erscheinen nur passende Übungen aus dem Katalog.</p><h3 id="planHeading">Übungen im Plan</h3><div id="planExercises"></div><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
@@ -401,17 +401,49 @@ function workoutId(){return JSON.stringify([el('sessionDate').value,activePlan()
 function workoutSeconds(){if(!workoutState)return 0;return Math.floor(((workoutState.elapsedMs||0)+(workoutState.running?Date.now()-workoutState.startedAt:0))/1000)}
 function formatWorkout(sec){return [Math.floor(sec/3600),Math.floor(sec%3600/60),sec%60].map(n=>String(n).padStart(2,'0')).join(':')}
 function paintWorkout(){const sec=workoutSeconds();el('workoutTopClock').textContent=formatWorkout(sec);el('workoutBottomClock').textContent=formatWorkout(sec);el('startWorkout').disabled=!!(workoutState&&(workoutState.running||workoutState.paused));el('endWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('pauseWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('pauseWorkout').textContent=workoutState&&workoutState.paused?'▶ Fortsetzen':'⏸ Pause';el('restartWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('startWorkout').textContent=workoutState&&workoutState.elapsedMs>0&&!workoutState.running?'▶ Neues Training starten':'▶ Starte Training'}
-function saveWorkout(){if(!workoutState)return;workoutTimes[workoutCurrentId||workoutId()]={elapsedMs:workoutState.elapsedMs,finished:!workoutState.running};try{localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(workoutTimes))}catch{}}
-function loadWorkout(){workoutCurrentId=workoutId();const stored=workoutTimes[workoutId()];workoutState=stored?{elapsedMs:stored.elapsedMs||0,running:false,startedAt:0}:null;el('workoutStatus').textContent=stored?'Gespeicherte Trainingszeit: '+formatWorkout(Math.floor((stored.elapsedMs||0)/1000)):'';paintWorkout()}
-function endWorkout(silent=false){if(!workoutState||(!workoutState.running&&!workoutState.paused))return;if(workoutState.running)workoutState.elapsedMs+=Date.now()-workoutState.startedAt;workoutState.running=false;workoutState.paused=false;workoutState.startedAt=0;saveWorkout();paintWorkout();if(!silent)el('workoutStatus').textContent='Training beendet. Gesamtdauer: '+formatWorkout(workoutSeconds())}
-el('startWorkout').addEventListener('click',()=>{workoutCurrentId=workoutId();if(workoutState&&(workoutState.running||workoutState.paused))return;workoutState={elapsedMs:0,startedAt:Date.now(),running:true};el('workoutStatus').textContent='Training läuft';paintWorkout()});
+function saveWorkout(){
+ if(!workoutState)return;
+ workoutTimes[workoutCurrentId||workoutId()]={elapsedMs:workoutState.elapsedMs||0,startedAt:workoutState.running?workoutState.startedAt:0,running:!!workoutState.running,paused:!!workoutState.paused,finished:!(workoutState.running||workoutState.paused)};
+ try{localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(workoutTimes))}catch{}
+}
+function loadWorkout(){
+ const id=workoutId();
+ if(workoutCurrentId===id&&workoutState){paintWorkout();return}
+ workoutCurrentId=id;
+ const stored=workoutTimes[id];
+ workoutState=stored?{elapsedMs:Math.max(0,Number(stored.elapsedMs)||0),running:!!stored.running&&Number(stored.startedAt)>0,startedAt:stored.running&&Number(stored.startedAt)>0?Number(stored.startedAt):0,paused:!!stored.paused}:null;
+ if(workoutState&&workoutState.running)el('workoutStatus').textContent='Training läuft weiter';
+ else if(workoutState&&workoutState.paused)el('workoutStatus').textContent='Training pausiert';
+ else el('workoutStatus').textContent=stored?'Gespeicherte Trainingszeit: '+formatWorkout(Math.floor((stored.elapsedMs||0)/1000)):'';
+ paintWorkout();
+}
+function endWorkout(silent=false){
+ if(!workoutState||(!workoutState.running&&!workoutState.paused))return;
+ if(workoutState.running)workoutState.elapsedMs+=Math.max(0,Date.now()-workoutState.startedAt);
+ workoutState.running=false;workoutState.paused=false;workoutState.startedAt=0;
+ saveWorkout();paintWorkout();
+ if(!silent)el('workoutStatus').textContent='Training beendet. Gesamtdauer: '+formatWorkout(workoutSeconds());
+}
+el('startWorkout').addEventListener('click',()=>{
+ workoutCurrentId=workoutId();if(workoutState&&(workoutState.running||workoutState.paused))return;
+ workoutState={elapsedMs:0,startedAt:Date.now(),running:true,paused:false};
+ saveWorkout();el('workoutStatus').textContent='Training läuft';paintWorkout();
+});
 el('pauseWorkout').addEventListener('click',()=>{
  if(!workoutState)return;
- if(workoutState.running){workoutState.elapsedMs+=Date.now()-workoutState.startedAt;workoutState.startedAt=0;workoutState.running=false;workoutState.paused=true;el('workoutStatus').textContent='Training pausiert';}
+ if(workoutState.running){workoutState.elapsedMs+=Math.max(0,Date.now()-workoutState.startedAt);workoutState.startedAt=0;workoutState.running=false;workoutState.paused=true;el('workoutStatus').textContent='Training pausiert';}
  else if(workoutState.paused){workoutState.startedAt=Date.now();workoutState.running=true;workoutState.paused=false;el('workoutStatus').textContent='Training läuft weiter';}
- paintWorkout();
+ saveWorkout();paintWorkout();
 });
-el('restartWorkout').addEventListener('click',()=>{if(!workoutState||(!workoutState.running&&!workoutState.paused))return;if(!confirm('Trainingszeit auf 00:00:00 zurücksetzen und den Timer stoppen? Bereits eingegebene Sätze bleiben erhalten.'))return;workoutState=null;delete workoutTimes[workoutCurrentId||workoutId()];try{localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(workoutTimes))}catch{}el('workoutStatus').textContent='Trainingsstart zurückgesetzt. Du kannst später erneut starten.';paintWorkout()});
+el('restartWorkout').addEventListener('click',()=>{
+ if(!workoutState||(!workoutState.running&&!workoutState.paused))return;
+ if(!confirm('Trainingszeit auf 00:00:00 zurücksetzen und den Timer stoppen? Bereits eingegebene Sätze bleiben erhalten.'))return;
+ workoutState=null;delete workoutTimes[workoutCurrentId||workoutId()];
+ try{localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(workoutTimes))}catch{}
+ el('workoutStatus').textContent='Trainingsstart zurückgesetzt. Du kannst später erneut starten.';paintWorkout();
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&workoutState)saveWorkout();else if(!document.hidden)paintWorkout()});
+window.addEventListener('pagehide',()=>{if(workoutState)saveWorkout()});
 function finishWorkoutAndSelectNext(){
  if(!workoutState||(!workoutState.running&&!workoutState.paused))return;
  // Vor dem Wechsel alle Eingaben sichern; unvollständige Sätze bleiben sichtbar.
@@ -487,7 +519,7 @@ function previousComment(name,day){
 function renderSession(){
   flushDraft();
  el('sessionPlanLabel').textContent={upper:'Oberkörper',lower:'Unterkörper',full:'Ganzkörper'}[activePlan()];
- endWorkout(true);loadWorkout();
+ if(workoutCurrentId!==workoutId())endWorkout(true);loadWorkout();
  exerciseRest.clear();activeRestExercise=null;
  const target=el('sessionExercises');target.replaceChildren();sessionSavers=[];sessionCommentSavers=[];sessionRows=[];
   renderedDraftId=draftId();
@@ -811,7 +843,7 @@ themeSelect.addEventListener('change',()=>{
 </script><script>
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js', {scope:'./'}).catch(err => console.warn('Offline-Modus nicht verfügbar:', err));
+    navigator.serviceWorker.register('./sw.js', {scope:'./', updateViaCache:'none'}).then(reg => reg.update()).catch(err => console.warn('Offline-Modus nicht verfügbar:', err));
   });
 }
 </script>
