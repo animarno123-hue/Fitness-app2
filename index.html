@@ -92,7 +92,7 @@ html[data-theme="light"] #message{color:#15803d}
 </style>
 </head>
 <body><main class="wrap">
-<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 55 · Automatische Zwischenspeicherung</p>
+<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 56 · Automatische Zwischenspeicherung</p>
 <nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingsplan</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingsplan</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Trainingskalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt & Rekorde</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
 <div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2>🏋️ Nächstes Training · <span id="sessionPlanLabel"></span></h2><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div>Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="workoutEndBar" class="workout-bar"><button id="endWorkout" class="danger" disabled>■ Training beenden</button><div>Trainingszeit: <strong id="workoutBottomClock">00:00:00</strong></div></div><p id="workoutStatus" class="tiny" role="status"></p><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession">Alle ausgefüllten Sätze speichern</button></div><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
 <div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper- und Unterkörperplan erscheinen nur passende Übungen aus dem Katalog.</p><h3 id="planHeading">Übungen im Plan</h3><div id="planExercises"></div><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
@@ -342,6 +342,30 @@ function flushDraft(){if(renderedDraftId&&el('sessionExercises').children.length
 
 // Ein kleiner Satzpausen-Timer pro Übung; nur der zuletzt beendete Satz läuft weiter.
 const exerciseRest=new Map();
+const REST_KEY='fitness-progress-rest-v56';
+let savedRest={};try{savedRest=JSON.parse(localStorage.getItem(REST_KEY))||{}}catch{}
+function restSessionId(){return JSON.stringify([el('sessionDate').value,activePlan()])}
+function persistRest(){
+ const id=restSessionId(),entries={};
+ for(const [name,state] of exerciseRest){entries[name]={running:state.running,startedAt:state.startedAt,elapsed:state.elapsed,info:state.info.textContent}}
+ savedRest[id]=entries;
+ try{localStorage.setItem(REST_KEY,JSON.stringify(savedRest))}catch{}
+}
+function restoreRest(){
+ const entries=savedRest[restSessionId()]||{};
+ activeRestExercise=null;
+ for(const [name,state] of exerciseRest){
+  const saved=entries[name];if(!saved)continue;
+  state.running=!!saved.running&&Number.isFinite(saved.startedAt)&&saved.startedAt>0;
+  state.startedAt=state.running?saved.startedAt:0;
+  state.elapsed=Number.isFinite(saved.elapsed)?Math.max(0,saved.elapsed):0;
+  state.info.textContent=saved.info||'Bereit';
+  if(state.running)activeRestExercise=name;
+ }
+ paintRest();
+}
+function clearRestForSession(id){delete savedRest[id];try{localStorage.setItem(REST_KEY,JSON.stringify(savedRest))}catch{}}
+
 let activeRestExercise=null;
 function formatRest(ms){const secs=Math.floor(Math.max(0,ms)/1000);return String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0')}
 function paintRest(){
@@ -360,13 +384,14 @@ function restartRest(name,index){
  const state=exerciseRest.get(name);if(!state)return;
  state.startedAt=Date.now();state.elapsed=0;state.running=true;
  state.info.textContent='Nach Satz '+(index+1);
- activeRestExercise=name;paintRest();
+ activeRestExercise=name;paintRest();persistRest();
 }
 function stopRest(){
  for(const state of exerciseRest.values()){if(state.running){state.elapsed=Date.now()-state.startedAt;state.running=false}}
- activeRestExercise=null;paintRest();
+ activeRestExercise=null;paintRest();persistRest();
 }
 setInterval(paintRest,1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)paintRest()});
 // Gesamte Trainingsdauer: getrennt von den Satzpausen, pro Datum und Trainingsplan.
 const WORKOUT_TIME_KEY='fitness-progress-workout-times-v1';
 let workoutTimes={};try{workoutTimes=JSON.parse(localStorage.getItem(WORKOUT_TIME_KEY))||{}}catch{}
@@ -404,7 +429,8 @@ function finishWorkoutAndSelectNext(){
   const previous=data.nextSplitDay;data.nextSplitDay=next;
   if(!persist()){data.nextSplitDay=previous;el('sessionMessage').textContent='Die nächste Einheit konnte nicht gespeichert werden. Bitte erneut versuchen.';return}
  }
- endWorkout();stopRest();
+ const completedRestId=restSessionId();
+ endWorkout();stopRest();clearRestForSession(completedRestId);
  try{localStorage.removeItem(NEXT_CHOICE_KEY)}catch{}
  if(next){
   el('splitDay').value=next;
@@ -448,7 +474,7 @@ function makeSessionRow(name,index,previous){
   sessionDraft[key]=true;kg.disabled=true;reps.disabled=true;rir.disabled=true;el('sessionMessage').textContent=name+' · Satz '+(index+1)+' gespeichert.';snapshotDraft();
   renderHistory();renderChart();renderCalendar();renderRecords();return true;
  }
- cancel.addEventListener('click',()=>{if(kg.disabled||reps.disabled)return;kg.value='';reps.value='';rir.value='';kg.dispatchEvent(new Event('input'));const state=exerciseRest.get(name);if(state&&state.running){state.running=false;state.elapsed=0;state.info.textContent='Abgebrochen';if(activeRestExercise===name)activeRestExercise=null;paintRest()}el('sessionMessage').textContent='Eingabe für '+name+' · Satz '+(index+1)+' verworfen. Übung bleibt im Plan.'});
+ cancel.addEventListener('click',()=>{if(kg.disabled||reps.disabled)return;kg.value='';reps.value='';rir.value='';kg.dispatchEvent(new Event('input'));const state=exerciseRest.get(name);if(state&&state.running){state.running=false;state.elapsed=0;state.info.textContent='Abgebrochen';if(activeRestExercise===name)activeRestExercise=null;paintRest();persistRest()}el('sessionMessage').textContent='Eingabe für '+name+' · Satz '+(index+1)+' verworfen. Übung bleibt im Plan.'});
  row.append(number,kg,reps,rir,cancel);const wrapper=document.createElement('div');wrapper.append(row);return {row:wrapper,save,inputs:[kg,reps]};
 }
 let sessionSavers=[];let sessionCommentSavers=[];let sessionRows=[];
@@ -462,7 +488,7 @@ function renderSession(){
   flushDraft();
  el('sessionPlanLabel').textContent={upper:'Oberkörper',lower:'Unterkörper',full:'Ganzkörper'}[activePlan()];
  endWorkout(true);loadWorkout();
- stopRest();exerciseRest.clear();
+ exerciseRest.clear();activeRestExercise=null;
  const target=el('sessionExercises');target.replaceChildren();sessionSavers=[];sessionCommentSavers=[];sessionRows=[];
   renderedDraftId=draftId();
   const currentDraft=workoutDrafts[renderedDraftId]||{};
@@ -485,9 +511,9 @@ function renderSession(){
   const restClock=document.createElement('strong');restClock.textContent='00:00';
   const restInfo=document.createElement('span');restInfo.className='tiny';restInfo.textContent='Bereit';
   const restStop=document.createElement('button');restStop.type='button';restStop.className='secondary';restStop.textContent='Stopp';restStop.title='Laufende Satzpause abbrechen, ohne die Übung zu entfernen';restStop.setAttribute('aria-label','Satzpause für '+name+' stoppen');
-  restStop.addEventListener('click',()=>{const state=exerciseRest.get(name);if(!state)return;state.running=false;state.elapsed=0;state.info.textContent='Abgebrochen';if(activeRestExercise===name)activeRestExercise=null;paintRest()});
+  restStop.addEventListener('click',()=>{const state=exerciseRest.get(name);if(!state)return;state.running=false;state.elapsed=0;state.info.textContent='Abgebrochen';if(activeRestExercise===name)activeRestExercise=null;paintRest();persistRest()});
   const restReset=document.createElement('button');restReset.type='button';restReset.className='secondary';restReset.textContent='↺';restReset.title='Satzpause zurücksetzen';restReset.setAttribute('aria-label','Satzpause für '+name+' zurücksetzen');
-  restReset.addEventListener('click',()=>{const state=exerciseRest.get(name);if(!state)return;state.running=false;state.elapsed=0;state.info.textContent='Zurückgesetzt';if(activeRestExercise===name)activeRestExercise=null;paintRest()});
+  restReset.addEventListener('click',()=>{const state=exerciseRest.get(name);if(!state)return;state.running=false;state.elapsed=0;state.info.textContent='Zurückgesetzt';if(activeRestExercise===name)activeRestExercise=null;paintRest();persistRest()});
   restBox.append(restLabel,restClock,restInfo,restStop,restReset);
   head.append(title,restBox,add,removeFromPlan);block.append(head);const completion=document.createElement('div');completion.className='exercise-completion';block.append(completion);
   exerciseRest.set(name,{clock:restClock,info:restInfo,startedAt:0,elapsed:0,running:false});
@@ -519,6 +545,7 @@ function renderSession(){
   sessionCommentSavers.push(saveComment);
   add.addEventListener('click',()=>{addRow();snapshotDraft()});target.append(block);updateCompletion();
  });
+ restoreRest();
  updateSessionProgress();
 }
 function updateSessionProgress(){const blocks=[...el('sessionExercises').querySelectorAll('.session-exercise')];const done=blocks.filter(b=>b.classList.contains('is-complete')).length;el('sessionProgress').textContent=blocks.length?`✓ ${done} von ${blocks.length} Übungen abgeschlossen`:'Noch keine Übungen im Trainingsplan. Bitte zuerst Übungen unter „Trainingsplan“ hinzufügen.'}
