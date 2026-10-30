@@ -54,6 +54,15 @@
 #pauseWorkout:disabled{opacity:.5;cursor:not-allowed}
 @media(max-width:450px){.workout-start-actions button{min-width:92px;padding:9px 8px;font-size:.85rem}.set-row{gap:5px}.set-row input{font-size:1rem}}
 
+/* V58: Letzte Leistung pro Übung und Satz */
+.last-performance{margin:10px 0 14px;padding:12px;border:1px solid #54718c;border-radius:12px;background:#102235;color:#e2e8f0}
+.last-performance-title{font-weight:700;font-size:.92rem;margin-bottom:7px}
+.last-performance .last-performance-row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-top:1px solid #ffffff20;font-size:.9rem}
+.last-performance .last-performance-row span:last-child{font-weight:650;text-align:right}
+.last-performance-empty{font-size:.86rem;color:#b6c8db}
+html[data-theme="light"] .last-performance{background:#eef5fc;color:#1e293b;border-color:#afc3d8}
+html[data-theme="light"] .last-performance .last-performance-row{border-color:#cbd5e1}
+html[data-theme="light"] .last-performance-empty{color:#475569}
 /* V52: Vollständiges helles Farbschema, nur bei aktivierter Auswahl. */
 html[data-theme="light"]{color-scheme:light;background:#e8edf3;color:#172334}
 html[data-theme="light"] body{background:#e8edf3;color:#172334}
@@ -92,7 +101,7 @@ html[data-theme="light"] #message{color:#15803d}
 </style>
 </head>
 <body><main class="wrap">
-<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 57 · Automatische Zwischenspeicherung</p>
+<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 58 · Letzte Trainingsleistung im Blick</p>
 <nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingsplan</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingsplan</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Trainingskalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt & Rekorde</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
 <div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2>🏋️ Nächstes Training · <span id="sessionPlanLabel"></span></h2><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div>Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="workoutEndBar" class="workout-bar"><button id="endWorkout" class="danger" disabled>■ Training beenden</button><div>Trainingszeit: <strong id="workoutBottomClock">00:00:00</strong></div></div><p id="workoutStatus" class="tiny" role="status"></p><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession">Alle ausgefüllten Sätze speichern</button></div><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
 <div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper- und Unterkörperplan erscheinen nur passende Übungen aus dem Katalog.</p><h3 id="planHeading">Übungen im Plan</h3><div id="planExercises"></div><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
@@ -484,6 +493,14 @@ function lastSessionSets(name,day){
  const dates=[...new Set(data.sets.filter(s=>s.exercise===name&&s.date<day).map(s=>s.date))].sort().reverse();
  return dates.length?data.sets.filter(s=>s.exercise===name&&s.date===dates[0]):[];
 }
+function previousPerformanceCard(previous,day){
+ const panel=document.createElement('div');panel.className='last-performance';
+ const heading=document.createElement('div');heading.className='last-performance-title';
+ if(!previous.length){heading.textContent='Letztes Training';const empty=document.createElement('div');empty.className='last-performance-empty';empty.textContent='Noch keine gespeicherten Leistungen vor diesem Trainingstag.';panel.append(heading,empty);return panel}
+ heading.textContent='Letztes Training · '+previous[0].date.split('-').reverse().join('.');panel.append(heading);
+ previous.forEach((set,i)=>{const line=document.createElement('div');line.className='last-performance-row';const left=document.createElement('span');left.textContent='Satz '+(set.setNumber||i+1);const right=document.createElement('span');right.textContent=set.weight+' kg × '+set.reps+' Wdh.'+(set.rir!==undefined&&set.rir!==null?' · RIR '+(set.rir===4?'4+':set.rir):'');line.append(left,right);panel.append(line)});
+ return panel;
+}
 function makeSessionRow(name,index,previous){
  const row=document.createElement('div');row.className='set-row';
  const number=document.createElement('strong');number.textContent=String(index+1)+'.';
@@ -550,6 +567,7 @@ function renderSession(){
   head.append(title,restBox,add,removeFromPlan);block.append(head);const completion=document.createElement('div');completion.className='exercise-completion';block.append(completion);
   exerciseRest.set(name,{clock:restClock,info:restInfo,startedAt:0,elapsed:0,running:false});
   
+  block.append(previousPerformanceCard(previous,day));
   const labels=document.createElement('div');labels.className='set-row tiny';labels.innerHTML='<span>Satz</span><span>Gewicht (kg)</span><span>Wdh.</span><span>RIR</span><span>✕</span>';block.append(labels);
   const rows=document.createElement('div');block.append(rows);
   let count=0;
