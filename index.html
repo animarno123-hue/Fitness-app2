@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fitness Progress Tracker</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#e5e7eb;background:#0f172a}*{box-sizing:border-box}body{margin:0;padding:18px}.wrap{max-width:780px;margin:auto}h1{font-size:1.6rem}h2{font-size:1.1rem;margin-top:0}.card{background:#1e293b;border-radius:14px;padding:18px;margin:14px 0}label{display:block;margin:12px 0 5px;color:#cbd5e1}input,select,button{font:inherit;border-radius:8px;padding:11px;width:100%;border:1px solid #475569}input,select{background:#0f172a;color:white}button{border:0;background:#38bdf8;color:#082f49;font-weight:700;cursor:pointer;margin-top:12px}.secondary{background:#334155;color:#e2e8f0}.danger{background:#7f1d1d;color:#fff}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.muted{color:#94a3b8;font-size:.9rem}.entry{padding:12px 0;border-bottom:1px solid #334155}.entry:last-child{border:0}canvas{width:100%;height:260px;display:block}#message{min-height:1.2em;color:#86efac}@media(max-width:450px){.grid{grid-template-columns:1fr}}
+
+.plan-item{display:flex;align-items:center;gap:8px;border-bottom:1px solid #334155;padding:8px 0}.plan-item span{flex:1}.plan-item button{width:auto;margin:0;padding:7px 10px}.session-exercise{border-top:1px solid #475569;padding:15px 0}.session-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.set-row{display:grid;grid-template-columns:32px minmax(0,1fr) minmax(0,1fr) 68px 42px;gap:8px;align-items:center;margin:9px 0}.set-row input{min-width:0}.set-row input::placeholder{color:#94a3b8;opacity:1}.set-row button{margin:0;padding:10px 4px}.tiny{font-size:.8rem;color:#94a3b8}.done{color:#86efac}.session-actions{display:flex;gap:8px;flex-wrap:wrap}.session-actions button{flex:1;min-width:140px}@media(max-width:450px){.set-row{grid-template-columns:25px minmax(0,1fr) minmax(0,1fr) 55px 38px;gap:5px}.set-row input{padding:9px 5px}.set-row button{font-size:.75rem}}
+
+.comment-box{margin-top:12px}.comment-box textarea{width:100%;min-height:66px;background:#0f172a;color:white;border:1px solid #475569;border-radius:8px;padding:10px;font:inherit;resize:vertical}.comment-box textarea::placeholder{color:#94a3b8}.comparison{font-size:.82rem;color:#86efac;margin:3px 0 9px 38px}.rest-timer{position:sticky;top:8px;z-index:5;background:#1e293b;border:1px solid #475569;border-radius:10px;padding:12px;margin:12px 0;display:flex;align-items:center;justify-content:space-between;gap:10px}.rest-timer strong{font-variant-numeric:tabular-nums;font-size:1.3rem}.rest-timer button{width:auto;margin:0}.prior-comment{background:#334155;color:#cbd5e1;border-radius:8px;padding:10px;margin:8px 0;font-size:.88rem;white-space:pre-wrap}.comment-box button{width:auto;padding:9px 14px}.calendar-nav{display:flex;gap:8px;align-items:center;justify-content:space-between}.calendar-nav button{width:auto;margin:0}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:12px}.calendar-grid button{padding:10px 2px;margin:0;background:#334155;color:white;min-height:42px}.calendar-grid button.has-training{background:#075985;border:1px solid #38bdf8}.calendar-grid button.selected{outline:2px solid #fbbf24}.calendar-grid .weekday{text-align:center;color:#94a3b8;font-size:.8rem;padding:8px 0}.calendar-grid .blank{min-height:42px}.calendar-entry{padding:12px;border:1px solid #475569;border-radius:9px;margin-top:10px}.calendar-entry h3{margin:0 0 8px}.calendar-entry p{margin:4px 0}.nav-link{display:inline-block;background:#334155;color:white;border-radius:8px;padding:10px 14px;text-decoration:none;margin:4px 5px 4px 0}html{scroll-behavior:smooth}
+.rir-input{padding:8px 3px!important;font-size:.85rem}.rir-note{font-size:.78rem;color:#94a3b8;margin:3px 0 8px 38px}.record-card{padding:14px;background:#334155;border-radius:10px;min-width:0}.record-value{display:block;font-size:1.5rem;margin:7px 0}.fold-heading{cursor:pointer;font-size:1.1rem;font-weight:700;list-style-position:inside;display:list-item}.fold-hint{float:right;font-size:.8rem;color:#94a3b8;font-weight:400;margin-top:3px}.fold-body{padding-top:10px}details[open] .fold-hint{display:none}
+.workout-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#0f172a;border:1px solid #475569;border-radius:10px;padding:12px;margin:12px 0}.workout-bar button{width:auto;margin:0;padding:9px 14px}.workout-bar strong{font-size:1.35rem;font-variant-numeric:tabular-nums;color:#86efac}.workout-bar .muted{font-size:.8rem}.exercise-rest{display:inline-flex;align-items:center;gap:6px;background:#0f172a;border:1px solid #475569;border-radius:8px;padding:5px 7px;white-space:nowrap}.exercise-rest strong{font-variant-numeric:tabular-nums;font-size:1rem;color:#e2e8f0;transition:color .2s ease}.exercise-rest .tiny{font-size:.7rem}.exercise-rest button{width:auto!important;min-width:28px;padding:3px 6px!important;margin:0!important}.session-head{flex-wrap:wrap;gap:8px}.remove-from-plan-small{width:auto!important;flex:0 0 auto;font-size:.65rem!important;font-weight:600;padding:4px 6px!important;margin:0!important;border-radius:5px;line-height:1.15;white-space:nowrap}
+.workout-start-actions{display:flex;gap:8px;flex-wrap:wrap}.workout-start-actions button{flex:1;min-width:115px}#restartWorkout:disabled{opacity:.5;cursor:not-allowed}#startWorkout{background:#16a34a;color:#fff}#endWorkout{background:#dc2626;color:#fff}#startWorkout:disabled,#endWorkout:disabled{opacity:.55;cursor:not-allowed}
+
+[hidden]{display:none!important}
+.app-navigation{position:sticky;top:0;z-index:20;background:#0f172a;padding:10px 0;border-bottom:1px solid #334155}
+.menu-bar{display:flex;align-items:center;gap:14px}
+#menuToggle{width:auto;margin:0;min-height:44px;padding:10px 16px}
+#activePageLabel{font-weight:700;color:#e2e8f0}
+.menu-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;padding-bottom:4px}
+.menu-tabs button{margin:0;text-align:left;background:#1e293b;color:#e2e8f0;min-height:46px;border:1px solid #475569}
+.menu-tabs button[aria-selected="true"]{background:#075985;border-color:#38bdf8;color:#fff}
+.menu-tabs button:focus-visible,#menuToggle:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
+.app-page:focus{outline:none}
+@media(max-width:360px){.menu-tabs{grid-template-columns:1fr}}
+.session-head > strong{font-size:1.5rem;line-height:1.3}
+
+/* Trainingsansicht: sanfter Wechsel zwischen dunklem und hellerem Grau */
+#sessionExercises .session-exercise{border-top:0;border-radius:12px;padding:16px 12px;margin:10px 0;background:#182231}
+#sessionExercises .session-exercise:nth-child(even){background:#303b4b}
+#sessionExercises .session-exercise:first-child{margin-top:14px}
+
+/* V44: übersichtliche Trainingskarten */
+#sessionExercises .session-exercise{border:1px solid #40516a;border-radius:16px;padding:18px 14px;margin:16px 0;box-shadow:0 5px 16px #0002}
+#sessionExercises .session-exercise:nth-child(odd){background:#1c293b}
+#sessionExercises .session-exercise:nth-child(even){background:#344357}
+.session-head>strong{font-size:clamp(1.25rem,4.5vw,1.55rem);line-height:1.3}
+/* + Satz: hell auf der ersten Karte, dunkel auf der zweiten, abwechselnd. */
+#sessionExercises .session-exercise:nth-child(odd) .session-head button.secondary{background:#344357;color:#f1f5f9;border:1px solid #64748b;box-shadow:0 1px 2px #0003}
+#sessionExercises .session-exercise:nth-child(even) .session-head button.secondary{background:#1c293b;color:#f1f5f9;border:1px solid #64748b;box-shadow:0 1px 2px #0003}
+#sessionExercises .session-exercise .session-head button.secondary:hover{filter:brightness(1.16);border-color:#94a3b8}
+#sessionExercises .session-exercise .session-head button.secondary:focus-visible{outline:2px solid #38bdf8;outline-offset:2px}
+.session-exercise.is-complete{border-color:#4ade80;box-shadow:inset 4px 0 #22c55e}
+.exercise-completion{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:#cbd5e1;margin:4px 0 10px}
+.session-exercise.is-complete .exercise-completion{color:#86efac;font-weight:700}
+.session-progress{padding:12px 14px;border:1px solid #475569;border-radius:12px;background:#182536;color:#e2e8f0;margin:12px 0;font-weight:650}
+.set-row input{min-height:48px;font-size:1.05rem;font-weight:650;background:#0c1728}
+.set-row input::placeholder{font-weight:400;color:#94a3b8}
+#pauseWorkout:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:450px){.workout-start-actions button{min-width:92px;padding:9px 8px;font-size:.85rem}.set-row{gap:5px}.set-row input{font-size:1rem}}
+
+/* V52: Vollständiges helles Farbschema, nur bei aktivierter Auswahl. */
+html[data-theme="light"]{color-scheme:light;background:#e8edf3;color:#172334}
+html[data-theme="light"] body{background:#e8edf3;color:#172334}
+html[data-theme="light"] .card{background:#fff;color:#172334;border:1px solid #c8d2df}
+html[data-theme="light"] label,html[data-theme="light"] #activePageLabel{color:#334155}
+html[data-theme="light"] .muted,html[data-theme="light"] .tiny,html[data-theme="light"] .rir-note,html[data-theme="light"] .fold-hint,html[data-theme="light"] .calendar-grid .weekday{color:#64748b}
+html[data-theme="light"] input,html[data-theme="light"] select,html[data-theme="light"] textarea,html[data-theme="light"] .comment-box textarea{background:#fff;color:#172334;border-color:#aebed0}
+html[data-theme="light"] input::placeholder,html[data-theme="light"] textarea::placeholder,html[data-theme="light"] .set-row input::placeholder{color:#64748b}
+html[data-theme="light"] button{background:#0284c7;color:white}
+html[data-theme="light"] button.secondary,html[data-theme="light"] .secondary{background:#e2e8f0;color:#172334;border:1px solid #aebed0}
+html[data-theme="light"] button.danger,html[data-theme="light"] .danger{background:#b91c1c;color:#fff}
+html[data-theme="light"] #startWorkout{background:#15803d;color:#fff}
+html[data-theme="light"] #endWorkout{background:#b91c1c;color:#fff}
+html[data-theme="light"] .app-navigation{background:#f1f5f9;border-color:#cbd5e1}
+html[data-theme="light"] .menu-tabs button{background:#fff;color:#172334;border-color:#b7c7d8}
+html[data-theme="light"] .menu-tabs button[aria-selected="true"]{background:#0369a1;color:#fff;border-color:#0284c7}
+html[data-theme="light"] .plan-item,html[data-theme="light"] .entry,html[data-theme="light"] .session-exercise{border-color:#d3deea}
+html[data-theme="light"] #sessionExercises .session-exercise:nth-child(odd){background:#ffffff;border-color:#b5c3d3;box-shadow:0 4px 12px #0f172a12}
+html[data-theme="light"] #sessionExercises .session-exercise:nth-child(even){background:#d3dfeb;border-color:#9eafc2;box-shadow:0 4px 12px #0f172a14}
+html[data-theme="light"] #sessionExercises .session-exercise:nth-child(odd) .session-head button.secondary{background:#d3dfeb;color:#172334;border:1px solid #8fa3b9;box-shadow:none}
+html[data-theme="light"] #sessionExercises .session-exercise:nth-child(even) .session-head button.secondary{background:#ffffff;color:#172334;border:1px solid #8fa3b9;box-shadow:none}
+html[data-theme="light"] .session-exercise.is-complete{border-color:#16a34a!important;box-shadow:inset 4px 0 #16a34a!important}
+html[data-theme="light"] .exercise-completion{color:#475569}
+html[data-theme="light"] .session-exercise.is-complete .exercise-completion,html[data-theme="light"] .done,html[data-theme="light"] .comparison{color:#15803d}
+html[data-theme="light"] .session-progress,html[data-theme="light"] .workout-bar,html[data-theme="light"] .exercise-rest,html[data-theme="light"] .rest-timer{background:#e8eef5;color:#172334;border-color:#b6c5d5}
+html[data-theme="light"] .workout-bar strong{color:#15803d}
+html[data-theme="light"] .exercise-rest strong{color:#172334}
+html[data-theme="light"] .set-row input{background:#fff;color:#172334;border-color:#b1bfd0}
+html[data-theme="light"] .record-card,html[data-theme="light"] .prior-comment{background:#dce6f0;color:#334155}
+html[data-theme="light"] .calendar-grid button{background:#e2e8f0;color:#172334;border:1px solid #cbd5e1}
+html[data-theme="light"] .calendar-grid button.has-training{background:#0369a1;color:#fff;border-color:#0284c7}
+html[data-theme="light"] .calendar-grid button.selected{outline:2px solid #d97706}
+html[data-theme="light"] .calendar-entry{border-color:#cbd5e1}
+html[data-theme="light"] .nav-link{background:#e2e8f0;color:#172334}
+html[data-theme="light"] #message{color:#15803d}
+</style>
+</head>
+<body><main class="wrap">
+<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 54 · Abwechselnde Übungshintergründe</p>
+<nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingsplan</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingsplan</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Trainingskalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt & Rekorde</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
+<div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2>🏋️ Nächstes Training · <span id="sessionPlanLabel"></span></h2><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div>Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="workoutEndBar" class="workout-bar"><button id="endWorkout" class="danger" disabled>■ Training beenden</button><div>Trainingszeit: <strong id="workoutBottomClock">00:00:00</strong></div></div><p id="workoutStatus" class="tiny" role="status"></p><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession">Alle ausgefüllten Sätze speichern</button></div><p id="sessionMessage" role="status" class="done"></p></section></div>
+<div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper- und Unterkörperplan erscheinen nur passende Übungen aus dem Katalog.</p><h3 id="planHeading">Übungen im Plan</h3><div id="planExercises"></div><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
+<details class="card" id="customExerciseCard"><summary class="fold-heading">Eigene Übungen verwalten <span class="fold-hint">Aufklappen</span></summary><div class="fold-body"><p class="muted">Erstelle eigene Übungen für Oberkörper oder Unterkörper. Sie erscheinen anschließend bei der Trainingsplan-Auswahl. Beim Löschen bleiben bisherige Trainingsleistungen im Verlauf erhalten.</p><label for="customExerciseName">Name der Übung</label><input id="customExerciseName" maxlength="70" placeholder="z. B. Seitheben Kurzhantel"><label for="customExerciseCategory">Kategorie</label><select id="customExerciseCategory"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><button id="customExerciseAdd">Eigene Übung hinzufügen</button><p id="customExerciseMessage" class="muted" role="status"></p><h3>Übungen aus der Auswahl entfernen</h3><p class="muted">Entfernt Übungen aus der Auswahl und allen zukünftigen Trainingsplänen. Bereits gespeicherte Trainingseinheiten und Rekorde bleiben erhalten.</p><label for="catalogRemoveExercise">Übung auswählen</label><select id="catalogRemoveExercise"></select><button id="catalogRemoveButton" class="danger">Aus Übungsauswahl entfernen</button><h3>Ausgeblendete Übungen</h3><div id="hiddenExerciseList"></div><h3>Meine eigenen Übungen</h3><div id="customExerciseList"></div></div></details></div>
+<div id="page-calendar" class="app-page" role="tabpanel" aria-labelledby="tab-calendar" tabindex="0" hidden><section class="card" id="calendarCard"><h2>📅 Trainingskalender</h2><p class="muted">Markierte Tage enthalten gespeicherte Sätze oder Kommentare. Tippe auf einen Tag, um die vollständige Einheit anzusehen.</p><div class="calendar-nav"><button id="calPrev" class="secondary" aria-label="Vorheriger Monat">◀</button><strong id="calMonth"></strong><button id="calNext" class="secondary" aria-label="Nächster Monat">▶</button></div><div id="calendarGrid" class="calendar-grid"></div><div id="calendarDetails"></div></section></div>
+<div id="page-progress" class="app-page" role="tabpanel" aria-labelledby="tab-progress" tabindex="0" hidden><section class="card" id="progressCard"><h2>Fortschritt</h2><label for="progressExercise">Übung auswählen</label><select id="progressExercise"></select><label for="metric">Auswertung</label><select id="metric"><option value="weight">Trainingsgewicht pro Satz (kg)</option><option value="reps">Wiederholungen pro Satz</option><option value="volume">2-Satz-Volumen (kg)</option></select><label for="period">Zeitraum</label><select id="period"><option value="all">Gesamter Zeitraum</option><option value="30">Letzte 30 Tage</option><option value="90">Letzte 90 Tage</option><option value="180">Letzte 180 Tage</option><option value="365">Letzte 365 Tage</option></select><div id="setToggles" class="grid" style="margin-top:12px"><label><input type="checkbox" id="show1" checked style="width:auto"> Satz 1</label><label><input type="checkbox" id="show2" checked style="width:auto"> Satz 2</label><label><input type="checkbox" id="show3" checked style="width:auto"> Satz 3</label></div><canvas id="chart" aria-label="Liniendiagramm der Trainingsentwicklung" role="img"></canvas><p id="chartInfo" class="muted"></p></section><details class="card" id="recordsAccordion"><summary class="fold-heading">🏆 Persönliche Rekorde <span class="fold-hint">Aufklappen</span></summary><section class="card" id="recordsCard"><h2>🏆 Persönliche Rekorde</h2><p class="muted">Bestwerte aus deinen tatsächlich gespeicherten Arbeitssätzen. Das Satzvolumen ist <strong>Gewicht × Wiederholungen eines einzelnen Satzes</strong> – nicht das 2-Satz-Volumen.</p><label for="recordExercise">Übung auswählen</label><select id="recordExercise"></select><div class="grid" id="recordSummary"></div><h3>Rekorde nach Kategorie</h3><div id="recordHistory"></div></section></details></div>
+<div id="page-sets" hidden aria-hidden="true"><section class="card"><h2>Arbeitssatz erfassen</h2><label for="exercise">Übung</label><select id="exercise"></select><label for="date">Trainingsdatum</label><input id="date" type="date"><div class="grid"><div><label for="weight">Gewicht (kg)</label><input id="weight" type="number" min="0" step="0.5" inputmode="decimal" placeholder="100"></div><div><label for="reps">Wiederholungen</label><input id="reps" type="number" min="1" step="1" inputmode="numeric" placeholder="8"></div></div><label for="singleRir">RIR (optional)</label><select id="singleRir"><option value="">Nicht angegeben</option><option value="0">0 – Muskelversagen</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option></select><button id="saveSet">Satz speichern</button><p id="message" role="status"></p></section>
+<section class="card"><h2>Gespeicherte Sätze</h2><div id="history"></div></section></div>
+<div id="page-backup" class="app-page" role="tabpanel" aria-labelledby="tab-backup" tabindex="0" hidden><section class="card"><h2>⚙️ Einstellungen & Datensicherung</h2><label for="themeSelect">Darstellung</label><select id="themeSelect"><option value="dark">🌙 Dunkler Modus</option><option value="light">☀️ Heller Modus</option></select><p class="muted">Die Darstellung wird auf diesem Gerät gespeichert.</p><p class="muted">Die Daten liegen nur in diesem Browser. Nach „Training beenden“ wird automatisch ein JSON-Backup heruntergeladen, sofern dein Browser Downloads erlaubt. Sichere die Datei regelmäßig an einem sicheren Ort.</p><p id="backupStatus" class="tiny" role="status">Sicherungen enthalten auch Trainingspläne und Übungskatalog.</p><button id="export" class="secondary">Backup als JSON herunterladen</button><label for="import">Backup importieren (ersetzt vorhandene Daten)</label><input id="import" type="file" accept=".json,application/json"><button id="importAction" type="button" class="secondary">Ausgewählte JSON-Datei importieren</button><p id="importFeedback" role="status" aria-live="polite" class="muted">Bitte zuerst eine JSON-Backup-Datei auswählen.</p></section></div>
+</main>
+<script>
+'use strict';
+const KEY='fitness-progress-v1';
+// Kommentare werden mit dem Trainingsdatum und Übungsnamen gespeichert.
+const upperCatalog=['Klimmzüge breit','Klimmzüge eng','Rudern am Seilzug breit','Rudern am Seilzug eng','Rudern Maschine','Rudern T-Bar','Rudern Kurzhantel','Hammer Curls','Dips','Brustpresse','Kurzhantel Bankdrücken','Kurzhantel Bankdrücken schräg','Preacher Curls Maschine','Preacher Curls','Langhantel Curls','Kurzhantel Curls','Trizeps drücken Seilzug','Shrugs Langhantel','Latzug breit','Latzug eng','Rotatorentraining am Seilzug','Schulterpresse','Schulterdrücken Langhantel','Seitheben Maschine','Seitheben Seilzug','Seitheben Kurzhantel'];
+const lowerCatalog=['Kniebeuge mit Langhantel','Kreuzheben rumänisch','Beinstrecker','Beinbeuger sitzend','Beinbeuger liegend','Wadenheben','Hip Thrusts','Ausfallschritte','Abduktion an der Maschine','Adduktion an der Maschine','Sit-up an der Negativbank','Hack Squat','Kreuzheben','Front Squat'];
+const sharedCatalog=['Rückenstrecker an der Maschine','Bauchpresse an der Maschine','Rotation vorgebeugt am Seilzug'];
+const defaults=[...upperCatalog,...lowerCatalog,...sharedCatalog];
+const CATEGORY_KEY='fitness-progress-categories-v5';
+let categories={};try{categories=JSON.parse(localStorage.getItem(CATEGORY_KEY))||{}}catch{}
+for(const name of upperCatalog)categories[name]='upper';
+for(const name of lowerCatalog)categories[name]='lower';
+for(const name of sharedCatalog)categories[name]='both';
+function saveCategories(){localStorage.setItem(CATEGORY_KEY,JSON.stringify(categories))}
+function categoryOf(name){return categories[name]||null}
+function eligible(name,key){return name!=='Rotation am Seilzug'&&(key==='full'||categoryOf(name)===key||categoryOf(name)==='both')}
+
+let data;
+try{const stored=JSON.parse(localStorage.getItem(KEY));data=stored&&Array.isArray(stored.exercises)&&Array.isArray(stored.sets)?stored:{exercises:[...defaults],sets:[]};}catch{data={exercises:[...defaults],sets:[]};}
+// Ältere Einträge bleiben für die Historie erhalten; nur der neue Katalog wird zur Planauswahl angeboten.
+for(const name of defaults)if(!data.exercises.includes(name))data.exercises.push(name);
+if(!data.comments||typeof data.comments!=='object'||Array.isArray(data.comments))data.comments={};
+if(!Array.isArray(data.customExercises))data.customExercises=[];
+if(!Array.isArray(data.hiddenExercises))data.hiddenExercises=[];
+// Veraltete Übung aus der aktiven Auswahl entfernen; historische Sätze bleiben bestehen.
+if(!data.hiddenExercises.includes('Rotation am Seilzug'))data.hiddenExercises.push('Rotation am Seilzug');
+for(const item of data.customExercises){if(item&&typeof item.name==='string'&&['upper','lower'].includes(item.category)){categories[item.name]=item.category;if(!data.exercises.includes(item.name))data.exercises.push(item.name)}}
+// Versehentlich angelegte Testübungen dauerhaft aus allen App-Daten entfernen.
+const obsoleteExerciseNames=new Set(['Kniebeuge','K']);
+function cleanObsoleteExercises(){
+ data.exercises=data.exercises.filter(n=>!obsoleteExerciseNames.has(n));
+ data.customExercises=data.customExercises.filter(item=>!obsoleteExerciseNames.has(item.name));
+ data.hiddenExercises=data.hiddenExercises.filter(n=>!obsoleteExerciseNames.has(n));
+ data.sets=data.sets.filter(item=>!obsoleteExerciseNames.has(item.exercise));
+ for(const key of Object.keys(data.comments)){
+  try{if(obsoleteExerciseNames.has(JSON.parse(key)[1]))delete data.comments[key]}catch{}
+ }
+ for(const name of obsoleteExerciseNames)delete categories[name];
+}
+cleanObsoleteExercises();
+const el=id=>document.getElementById(id);
+
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));if(document.getElementById('recordExercise'))renderRecords();return true}catch{el('message').textContent='Speichern fehlgeschlagen. Bitte Speicherplatz prüfen.';return false}}
+function localDate(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+el('date').value=localDate();
+function renderExercises(selected){const sel=el('exercise');const current=selected||sel.value;sel.replaceChildren();data.exercises.filter(name=>!obsoleteExerciseNames.has(name)&&!data.hiddenExercises.includes(name)).forEach(name=>{const opt=document.createElement('option');opt.value=name;opt.textContent=name;sel.append(opt)});if([...sel.options].some(option=>option.value===current))sel.value=current;renderHistory();renderChart();renderCalendar();renderRecords()}
+function saveSet(){const exercise=el('exercise').value,date=el('date').value,weight=Number(el('weight').value),reps=Number(el('reps').value);if(!exercise||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!el('weight').value.trim()||!Number.isFinite(weight)||weight<0||weight>2000||!Number.isInteger(reps)||reps<1||reps>1000){el('message').textContent='Bitte gültiges Datum, Gewicht und Wiederholungen eingeben.';return}const entry={id:crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random(),exercise,date,weight,reps};if(el('singleRir').value!=='')entry.rir=Number(el('singleRir').value);data.sets.push(entry);if(!persist()){data.sets.pop();return}el('reps').value='';el('singleRir').value='';el('message').textContent='Satz gespeichert.';renderHistory();renderChart();renderCalendar();renderRecords()}
+function renderHistory(){const target=el('history');target.replaceChildren();const sets=data.sets.filter(s=>s.exercise===el('exercise').value).sort((a,b)=>b.date.localeCompare(a.date));if(!sets.length){target.textContent='Noch keine Sätze für diese Übung.';return}sets.forEach(s=>{const row=document.createElement('div');row.className='entry';const title=document.createElement('div');title.textContent=`${s.date} · ${s.weight} kg × ${s.reps} Wdh.${s.rir!==undefined?' · RIR '+(s.rir===4?'4+':s.rir):''}`;const btn=document.createElement('button');btn.className='danger';btn.textContent='Satz löschen';btn.addEventListener('click',()=>{if(!confirm('Diesen Satz wirklich löschen?'))return;const previous=data.sets;data.sets=data.sets.filter(x=>x.id!==s.id);if(!persist()){data.sets=previous;return}renderHistory();renderChart();renderCalendar();renderRecords()});row.append(title,btn);target.append(row)})}
+function renderChart(){
+ const canvas=el('chart'),ctx=canvas.getContext('2d'),info=el('chartInfo');
+ const metric=el('metric').value,period=el('period').value;
+ el('setToggles').style.display=metric==='volume'?'none':'grid';
+ const dpr=window.devicePixelRatio||1,width=canvas.clientWidth||320,height=260;
+ canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+ ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+ const grouped=new Map();
+ // Satznummer wird durch die Speicherreihenfolge innerhalb des Trainingstags bestimmt.
+ data.sets.filter(s=>s.exercise===el('exercise').value).forEach(s=>{
+   if(!grouped.has(s.date))grouped.set(s.date,[]);
+   grouped.get(s.date).push(s);
+ });
+ for(const rows of grouped.values())rows.sort((a,b)=>(a.setNumber??999)-(b.setNumber??999));
+ const cutoff=new Date();cutoff.setHours(0,0,0,0);
+ if(period!=='all')cutoff.setDate(cutoff.getDate()-Number(period)+1);
+ const cutoffStr=`${cutoff.getFullYear()}-${String(cutoff.getMonth()+1).padStart(2,'0')}-${String(cutoff.getDate()).padStart(2,'0')}`;
+ const dates=[...grouped.keys()].filter(d=>period==='all'||d>=cutoffStr).sort();
+ const colors=['#38bdf8','#fbbf24','#a78bfa'];
+ let series=[];
+ if(metric==='volume'){
+  series=[{name:'Satz 1 + 2',color:colors[0],points:dates.filter(d=>grouped.get(d).length>=2).map(d=>({date:d,value:grouped.get(d).slice(0,2).reduce((a,s)=>a+s.weight*s.reps,0)}))}];
+ }else{
+  for(let i=0;i<3;i++)if(el('show'+(i+1)).checked){
+   series.push({name:'Satz '+(i+1),color:colors[i],points:dates.filter(d=>grouped.get(d).length>i).map(d=>({date:d,value:metric==='weight'?grouped.get(d)[i].weight:grouped.get(d)[i].reps}))});
+  }
+ }
+ const values=series.flatMap(s=>s.points.map(p=>p.value));
+ if(!values.length){info.textContent=metric==='volume'?'Für diese Statistik werden mindestens zwei gespeicherte Sätze am selben Trainingstag benötigt.':'Keine passenden Sätze im gewählten Zeitraum.';return}
+ const lo=Math.max(0,Math.min(...values)-(Math.max(...values)-Math.min(...values)||1)*.15),hi=Math.max(...values)+(Math.max(...values)-Math.min(...values)||1)*.15;
+ const left=52,right=width-18,top=18,bottom=height-48;
+ ctx.font='12px system-ui';ctx.lineWidth=1;
+ for(let i=0;i<=4;i++){
+  const y=top+(bottom-top)*i/4;ctx.strokeStyle='#475569';ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();
+  ctx.fillStyle='#cbd5e1';ctx.fillText((hi-(hi-lo)*i/4).toFixed(metric==='reps'?0:1),3,y+4);
+ }
+ const x=d=>dates.length===1?(left+right)/2:left+(right-left)*dates.indexOf(d)/(dates.length-1);
+ const y=v=>bottom-(v-lo)/(hi-lo)*(bottom-top);
+ series.forEach(s=>{
+  if(!s.points.length)return;
+  ctx.strokeStyle=s.color;ctx.lineWidth=2.5;ctx.beginPath();s.points.forEach((p,i)=>i?ctx.lineTo(x(p.date),y(p.value)):ctx.moveTo(x(p.date),y(p.value)));ctx.stroke();
+  s.points.forEach(p=>{ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(x(p.date),y(p.value),3.5,0,Math.PI*2);ctx.fill()});
+ });
+ ctx.fillStyle='#cbd5e1';ctx.fillText(dates[0].slice(5),left,bottom+21);
+ if(dates.length>1){ctx.textAlign='right';ctx.fillText(dates.at(-1).slice(5),right,bottom+21);ctx.textAlign='left'}
+ const fmt=n=>Number(n.toFixed(1)).toLocaleString('de-DE');
+ info.textContent=series.map(s=>s.name+': '+(s.points.length?fmt(s.points[0].value)+' → '+fmt(s.points.at(-1).value)+(metric==='reps'?' Wdh.':' kg'):'keine Daten')).join(' | ');
+}
+['metric','period','show1','show2','show3'].forEach(id=>el(id).addEventListener('change',renderChart));
+el('saveSet').addEventListener('click',saveSet);el('exercise').addEventListener('change',()=>{renderHistory();renderChart()});window.addEventListener('resize',renderChart);
+function downloadBackup(){
+ const blob=new Blob([JSON.stringify({...data,plans,categories,workoutTimes,backupVersion:45,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='fitness-backup-'+localDate()+'-'+new Date().toTimeString().slice(0,8).replaceAll(':','')+'.json';document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);if(el('backupStatus'))el('backupStatus').textContent='Backup erstellt: '+new Date().toLocaleString('de-DE')+' · Bitte Download im Browser prüfen.';
+}
+el('export').addEventListener('click',downloadBackup);
+// Import V54: Auswahl und Import bewusst trennen; Fehler sichtbar anzeigen.
+const importInput=el('import'),importFeedback=el('importFeedback'),importAction=el('importAction');
+importInput.addEventListener('change',()=>{
+ const file=importInput.files&&importInput.files[0];
+ importFeedback.textContent=file?'Ausgewählt: '+file.name+' ('+Math.ceil(file.size/1024)+' KB). Jetzt auf „Ausgewählte JSON-Datei importieren“ tippen.':'Keine Datei ausgewählt.';
+});
+importAction.addEventListener('click',async()=>{
+ const file=importInput.files&&importInput.files[0];
+ if(!file){importFeedback.textContent='Bitte zuerst eine JSON-Datei auswählen.';return}
+ importAction.disabled=true;importFeedback.textContent='Backup wird geprüft …';
+ try{
+  const parsed=JSON.parse(await file.text());
+  if(!parsed||!Array.isArray(parsed.exercises)||!Array.isArray(parsed.sets)||
+   !parsed.exercises.every(x=>typeof x==='string'&&x.length<=70)||
+   !parsed.sets.every(s=>s&&typeof s.id==='string'&&typeof s.exercise==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s.date)&&Number.isFinite(s.weight)&&s.weight>=0&&Number.isInteger(s.reps)&&s.reps>0))
+   throw Error('Diese Datei hat kein gültiges Fitness-App-Backup-Format.');
+  const newPlans=parsed.plans&&['full','upper','lower'].every(k=>Array.isArray(parsed.plans[k]))?parsed.plans:null;
+  const newCategories=parsed.categories&&typeof parsed.categories==='object'&&!Array.isArray(parsed.categories)?parsed.categories:null;
+  const newTimes=parsed.workoutTimes&&typeof parsed.workoutTimes==='object'&&!Array.isArray(parsed.workoutTimes)?parsed.workoutTimes:null;
+  if(!confirm('Backup mit '+parsed.sets.length+' Sätzen importieren? Bereits vorhandene Daten in dieser App werden ersetzt.')){importFeedback.textContent='Import abgebrochen. Es wurde nichts verändert.';return}
+  // Vor dem Überschreiben vorhandene Werte für einen Rückweg im Browser sichern.
+  const keys=[KEY,PLAN_KEY,CATEGORY_KEY,WORKOUT_TIME_KEY,NEXT_CHOICE_KEY];
+  const before=Object.fromEntries(keys.map(k=>[k,localStorage.getItem(k)]));
+  try{
+   const imported={...parsed,customExercises:Array.isArray(parsed.customExercises)?parsed.customExercises:[],hiddenExercises:Array.isArray(parsed.hiddenExercises)?parsed.hiddenExercises:[],comments:parsed.comments&&typeof parsed.comments==='object'?parsed.comments:{}};
+   imported.exercises=imported.exercises.filter(n=>!obsoleteExerciseNames.has(n));
+   imported.sets=imported.sets.filter(row=>!obsoleteExerciseNames.has(row.exercise));
+   for(const name of defaults)if(!imported.exercises.includes(name))imported.exercises.push(name);
+   localStorage.setItem(KEY,JSON.stringify(imported));
+   if(newPlans)localStorage.setItem(PLAN_KEY,JSON.stringify(Object.fromEntries(['full','upper','lower'].map(k=>[k,newPlans[k].filter(n=>!obsoleteExerciseNames.has(n)&&n!=='Rotation am Seilzug')]))));
+   if(newCategories)localStorage.setItem(CATEGORY_KEY,JSON.stringify({...categories,...newCategories}));
+   if(newTimes)localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(newTimes));
+   localStorage.removeItem(NEXT_CHOICE_KEY);
+  }catch(error){
+   for(const [k,v] of Object.entries(before)){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch{}}
+   throw Error('Speichern im Browser fehlgeschlagen: '+error.message);
+  }
+  importFeedback.textContent='Erfolgreich: '+parsed.sets.length+' Sätze übernommen. Die App wird neu geladen.';
+  el('backupStatus').textContent=importFeedback.textContent;
+  window.location.reload();
+ }catch(error){importFeedback.textContent='Import fehlgeschlagen: '+error.message;el('backupStatus').textContent=importFeedback.textContent}
+ finally{importAction.disabled=false}
+});
+// Trainingspläne werden getrennt von den Trainingsdaten gespeichert.
+const PLAN_KEY='fitness-progress-plans-v5';
+let plans;
+try{plans=JSON.parse(localStorage.getItem(PLAN_KEY));if(!plans||!Array.isArray(plans.full)||!Array.isArray(plans.upper)||!Array.isArray(plans.lower))throw Error('Invalid');}
+catch{plans={full:[],upper:[],lower:[]};}
+for(const key of ['full','upper','lower'])plans[key]=plans[key].filter(name=>!obsoleteExerciseNames.has(name));
+for(const key of ['full','upper','lower'])plans[key]=plans[key].filter(name=>name!=='Rotation am Seilzug');
+function savePlans(){try{localStorage.setItem(PLAN_KEY,JSON.stringify(plans));return true}catch{el('planMessage').textContent='Trainingsplan konnte nicht gespeichert werden.';return false}}
+function activePlan(){return el('planSystem').value==='full'?'full':el('splitDay').value}
+function dayAfter(iso){const [y,m,d]=iso.split('-').map(Number);const next=new Date(y,m-1,d+1);return `${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,'0')}-${String(next.getDate()).padStart(2,'0')}`}
+function latestFinishedWorkout(){
+ const today=localDate();
+ return Object.entries(workoutTimes).filter(([id,value])=>{try{const [date,kind]=JSON.parse(id);return value&&value.finished&&date<=today&&['upper','lower','full'].includes(kind)}catch{return false}})
+  .map(([id])=>({id,date:JSON.parse(id)[0],kind:JSON.parse(id)[1]}))
+  .sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id)).at(-1)||null;
+}
+function suggestedTrainingDate(){
+ const today=localDate(),last=latestFinishedWorkout();
+ return last&&dayAfter(last.date)>today?dayAfter(last.date):today;
+}
+// Eine manuelle Auswahl gilt nur bis zum nächsten abgeschlossenen Training.
+const NEXT_CHOICE_KEY='fitness-progress-next-choice-v1';
+function getNextChoice(){try{return JSON.parse(localStorage.getItem(NEXT_CHOICE_KEY))}catch{return null}}
+function setNextChoice(kind){try{localStorage.setItem(NEXT_CHOICE_KEY,JSON.stringify({after:latestFinishedWorkout()?.id||null,kind}))}catch{}}
+function chooseUpcomingSplit(){
+ if(el('planSystem').value!=='split')return;
+ const last=latestFinishedWorkout(),choice=getNextChoice();
+ let next=last&&['upper','lower'].includes(last.kind)?(last.kind==='upper'?'lower':'upper'):data.nextSplitDay;
+ if(choice&&choice.after===(last?.id||null)&&['upper','lower'].includes(choice.kind))next=choice.kind;
+ if(!['upper','lower'].includes(next))next='upper';
+ el('splitDay').value=next;data.nextSplitDay=next;
+ syncTrainingSelector();
+}
+
+function syncTrainingSelector(){el('sessionSplitChooser').hidden=el('planSystem').value==='full';el('sessionSplitDay').value=el('splitDay').value}
+
+function renderPlan(){
+ const isSplit=el('planSystem').value==='split';el('splitSelect').style.display=isSplit?'block':'none';
+ const key=activePlan(),names={full:'Ganzkörper',upper:'Oberkörper',lower:'Unterkörper'};
+ el('planHeading').textContent='Übungen: '+names[key];
+ const box=el('planExercises');box.replaceChildren();
+ plans[key].filter(x=>data.exercises.includes(x)&&eligible(x,key)).forEach((name,index)=>{
+  const row=document.createElement('div');row.className='plan-item';
+  const label=document.createElement('span');label.textContent=(index+1)+'. '+name;
+  const up=document.createElement('button');up.className='secondary';up.textContent='↑';up.title='Nach oben';up.disabled=index===0;
+  up.onclick=()=>{[plans[key][index-1],plans[key][index]]=[plans[key][index],plans[key][index-1]];savePlans();renderPlan();renderSession()};
+  const down=document.createElement('button');down.className='secondary';down.textContent='↓';down.title='Nach unten';down.disabled=index===plans[key].length-1;
+  down.onclick=()=>{[plans[key][index+1],plans[key][index]]=[plans[key][index],plans[key][index+1]];savePlans();renderPlan();renderSession()};
+  const remove=document.createElement('button');remove.className='danger';remove.textContent='×';remove.title='Aus Plan entfernen (Trainingshistorie bleibt erhalten)';
+  remove.onclick=()=>{plans[key]=plans[key].filter(x=>x!==name);savePlans();renderPlan();renderSession()};
+  row.append(label,up,down,remove);box.append(row);
+ });
+ if(!box.children.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='Noch keine Übungen. Füge unten eine hinzu.';box.append(empty)}
+ const add=el('planAddExercise');add.replaceChildren();data.exercises.filter(x=>(defaults.includes(x)||data.customExercises.some(y=>y.name===x))&&!data.hiddenExercises.includes(x)&&categoryOf(x)&&eligible(x,key)&&!plans[key].includes(x)).sort((a,b)=>a.localeCompare(b,'de',{sensitivity:'base'})).forEach(x=>{const opt=document.createElement('option');opt.value=x;opt.textContent=x;add.append(opt)});
+ el('planAddButton').disabled=!add.options.length;
+}
+const SYSTEM_KEY='fitness-progress-selected-system-v6';
+try{el('planSystem').value=localStorage.getItem(SYSTEM_KEY)==='full'?'full':'split'}catch{el('planSystem').value='split'}
+el('planSystem').addEventListener('change',()=>{syncTrainingSelector();try{localStorage.setItem(SYSTEM_KEY,el('planSystem').value)}catch{}renderPlan();renderSession()});
+if(['upper','lower'].includes(data.nextSplitDay))el('splitDay').value=data.nextSplitDay;
+el('splitDay').addEventListener('change',()=>{syncTrainingSelector();data.nextSplitDay=el('splitDay').value;setNextChoice(data.nextSplitDay);persist();renderPlan();renderSession()});
+el('planAddButton').addEventListener('click',()=>{const name=el('planAddExercise').value;if(!name)return;if(!eligible(name,activePlan()))return;plans[activePlan()].push(name);savePlans();renderPlan();renderSession()});
+el('sessionSplitDay').addEventListener('change',()=>{el('splitDay').value=el('sessionSplitDay').value;data.nextSplitDay=el('splitDay').value;setNextChoice(data.nextSplitDay);if(!persist())return;Object.keys(sessionDraft).forEach(k=>delete sessionDraft[k]);renderPlan();renderSession();el('sessionMessage').textContent='Nächste Trainingseinheit gespeichert: '+(el('splitDay').value==='upper'?'Oberkörper':'Unterkörper')+'.'});
+syncTrainingSelector();
+// Trainingsmodus: alle Übungen und einzelne Sätze mit letzten Werten.
+const sessionDraft={};
+// Ein kleiner Satzpausen-Timer pro Übung; nur der zuletzt beendete Satz läuft weiter.
+const exerciseRest=new Map();
+let activeRestExercise=null;
+function formatRest(ms){const secs=Math.floor(Math.max(0,ms)/1000);return String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0')}
+function paintRest(){
+ for(const [name,state] of exerciseRest){
+  if(!state.clock.isConnected){exerciseRest.delete(name);continue}
+  const elapsed=state.running?Date.now()-state.startedAt:state.elapsed;
+  state.clock.textContent=formatRest(elapsed);
+  const seconds=Math.floor(Math.max(0,elapsed)/1000);
+  // 0:00–1:29 rot, 1:30–2:59 gelb, 3:00–3:59 grün,
+  // 4:00–4:59 gelb, ab 5:00 rot (auch nach 6:00).
+  state.clock.style.color=seconds<90?'#f87171':seconds<180?'#fde047':seconds<240?'#4ade80':seconds<300?'#fde047':'#f87171';
+ }
+}
+function restartRest(name,index){
+ if(activeRestExercise&&activeRestExercise!==name){const other=exerciseRest.get(activeRestExercise);if(other&&other.running){other.elapsed=Date.now()-other.startedAt;other.running=false}}
+ const state=exerciseRest.get(name);if(!state)return;
+ state.startedAt=Date.now();state.elapsed=0;state.running=true;
+ state.info.textContent='Nach Satz '+(index+1);
+ activeRestExercise=name;paintRest();
+}
+function stopRest(){
+ for(const state of exerciseRest.values()){if(state.running){state.elapsed=Date.now()-state.startedAt;state.running=false}}
+ activeRestExercise=null;paintRest();
+}
+setInterval(paintRest,1000);
+// Gesamte Trainingsdauer: getrennt von den Satzpausen, pro Datum und Trainingsplan.
+const WORKOUT_TIME_KEY='fitness-progress-workout-times-v1';
+let workoutTimes={};try{workoutTimes=JSON.parse(localStorage.getItem(WORKOUT_TIME_KEY))||{}}catch{}
+let workoutState=null;
+let workoutCurrentId=null;
+function workoutId(){return JSON.stringify([el('sessionDate').value,activePlan()])}
+function workoutSeconds(){if(!workoutState)return 0;return Math.floor(((workoutState.elapsedMs||0)+(workoutState.running?Date.now()-workoutState.startedAt:0))/1000)}
+function formatWorkout(sec){return [Math.floor(sec/3600),Math.floor(sec%3600/60),sec%60].map(n=>String(n).padStart(2,'0')).join(':')}
+function paintWorkout(){const sec=workoutSeconds();el('workoutTopClock').textContent=formatWorkout(sec);el('workoutBottomClock').textContent=formatWorkout(sec);el('startWorkout').disabled=!!(workoutState&&(workoutState.running||workoutState.paused));el('endWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('pauseWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('pauseWorkout').textContent=workoutState&&workoutState.paused?'▶ Fortsetzen':'⏸ Pause';el('restartWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('startWorkout').textContent=workoutState&&workoutState.elapsedMs>0&&!workoutState.running?'▶ Neues Training starten':'▶ Starte Training'}
+function saveWorkout(){if(!workoutState)return;workoutTimes[workoutCurrentId||workoutId()]={elapsedMs:workoutState.elapsedMs,finished:!workoutState.running};try{localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(workoutTimes))}catch{}}
+function loadWorkout(){workoutCurrentId=workoutId();const stored=workoutTimes[workoutId()];workoutState=stored?{elapsedMs:stored.elapsedMs||0,running:false,startedAt:0}:null;el('workoutStatus').textContent=stored?'Gespeicherte Trainingszeit: '+formatWorkout(Math.floor((stored.elapsedMs||0)/1000)):'';paintWorkout()}
+function endWorkout(silent=false){if(!workoutState||(!workoutState.running&&!workoutState.paused))return;if(workoutState.running)workoutState.elapsedMs+=Date.now()-workoutState.startedAt;workoutState.running=false;workoutState.paused=false;workoutState.startedAt=0;saveWorkout();paintWorkout();if(!silent)el('workoutStatus').textContent='Training beendet. Gesamtdauer: '+formatWorkout(workoutSeconds())}
+el('startWorkout').addEventListener('click',()=>{workoutCurrentId=workoutId();if(workoutState&&(workoutState.running||workoutState.paused))return;workoutState={elapsedMs:0,startedAt:Date.now(),running:true};el('workoutStatus').textContent='Training läuft';paintWorkout()});
+el('pauseWorkout').addEventListener('click',()=>{
+ if(!workoutState)return;
+ if(workoutState.running){workoutState.elapsedMs+=Date.now()-workoutState.startedAt;workoutState.startedAt=0;workoutState.running=false;workoutState.paused=true;el('workoutStatus').textContent='Training pausiert';}
+ else if(workoutState.paused){workoutState.startedAt=Date.now();workoutState.running=true;workoutState.paused=false;el('workoutStatus').textContent='Training läuft weiter';}
+ paintWorkout();
+});
+el('restartWorkout').addEventListener('click',()=>{if(!workoutState||(!workoutState.running&&!workoutState.paused))return;if(!confirm('Trainingszeit auf 00:00:00 zurücksetzen und den Timer stoppen? Bereits eingegebene Sätze bleiben erhalten.'))return;workoutState=null;delete workoutTimes[workoutCurrentId||workoutId()];try{localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(workoutTimes))}catch{}el('workoutStatus').textContent='Trainingsstart zurückgesetzt. Du kannst später erneut starten.';paintWorkout()});
+function finishWorkoutAndSelectNext(){
+ if(!workoutState||(!workoutState.running&&!workoutState.paused))return;
+ // Vor dem Wechsel alle Eingaben sichern; unvollständige Sätze bleiben sichtbar.
+ for(let i=0;i<sessionSavers.length;i++){
+  const inputs=sessionRows[i];
+  if(inputs&&!inputs[0].disabled&&(inputs[0].value.trim()||inputs[1].value.trim())){
+   if(!sessionSavers[i]()){el('sessionMessage').textContent='Bitte unvollständige oder ungültige Sätze korrigieren oder mit ✕ verwerfen, bevor du das Training beendest.';return}
+  }
+ }
+ sessionCommentSavers.forEach(save=>save());
+ const finishedPlan=JSON.parse(workoutCurrentId||workoutId())[1];
+ const duration=formatWorkout(workoutSeconds());
+ const next=finishedPlan==='upper'?'lower':finishedPlan==='lower'?'upper':null;
+ if(next){
+  const previous=data.nextSplitDay;data.nextSplitDay=next;
+  if(!persist()){data.nextSplitDay=previous;el('sessionMessage').textContent='Die nächste Einheit konnte nicht gespeichert werden. Bitte erneut versuchen.';return}
+ }
+ endWorkout();stopRest();
+ try{localStorage.removeItem(NEXT_CHOICE_KEY)}catch{}
+ if(next){
+  el('splitDay').value=next;
+  syncTrainingSelector();
+  el('sessionDate').value=dayAfter(el('sessionDate').value);
+  Object.keys(sessionDraft).forEach(key=>delete sessionDraft[key]);
+  renderPlan();renderSession();
+  el('workoutStatus').textContent=(finishedPlan==='upper'?'Oberkörper':'Unterkörper')+' beendet · Dauer: '+duration+'. Nächstes Training: '+(next==='upper'?'Oberkörper':'Unterkörper')+'.';
+ }else{el('sessionDate').value=dayAfter(el('sessionDate').value);renderSession();el('workoutStatus').textContent='Ganzkörper beendet · Dauer: '+duration+'. Nächstes Training: Ganzkörper.'}
+ el('sessionMessage').textContent='Training abgeschlossen. Sätze und Kommentare gespeichert. JSON-Backup wird heruntergeladen (sofern vom Browser erlaubt).';
+ downloadBackup();
+}
+el('endWorkout').addEventListener('click',finishWorkoutAndSelectNext);
+setInterval(paintWorkout,1000);
+
+chooseUpcomingSplit();
+el('sessionDate').value=suggestedTrainingDate();
+function lastSessionSets(name,day){
+ const dates=[...new Set(data.sets.filter(s=>s.exercise===name&&s.date<day).map(s=>s.date))].sort().reverse();
+ return dates.length?data.sets.filter(s=>s.exercise===name&&s.date===dates[0]):[];
+}
+function makeSessionRow(name,index,previous){
+ const row=document.createElement('div');row.className='set-row';
+ const number=document.createElement('strong');number.textContent=String(index+1)+'.';
+ const kg=document.createElement('input');kg.type='number';kg.min='0';kg.max='2000';kg.step='any';kg.inputMode='decimal';kg.placeholder=previous?String(previous.weight):'kg';kg.setAttribute('aria-label',name+' Satz '+(index+1)+' Gewicht');
+ const reps=document.createElement('input');reps.type='number';reps.min='1';reps.max='1000';reps.step='1';reps.inputMode='numeric';reps.placeholder=previous?String(previous.reps):'Wdh.';reps.setAttribute('aria-label',name+' Satz '+(index+1)+' Wiederholungen');
+ const rir=document.createElement('select');rir.className='rir-input';rir.setAttribute('aria-label',name+' Satz '+(index+1)+' RIR');
+ for(const [value,label] of [['','–'],['0','0'],['1','1'],['2','2'],['3','3'],['4','4+']]){const opt=document.createElement('option');opt.value=value;opt.textContent=label;rir.append(opt)}
+ const cancel=document.createElement('button');cancel.type='button';cancel.className='secondary';cancel.textContent='✕';cancel.title='Eingabe dieses Satzes verwerfen und Satzpause stoppen';cancel.setAttribute('aria-label',name+' Satz '+(index+1)+' Eingabe abbrechen');cancel.style.width='auto';cancel.style.padding='8px';
+ // Ein abgeschlossener Wiederholungs-Eintrag markiert das Satzende.
+ // 'change' feuert beim Verlassen des Feldes, nicht bei jeder Ziffer.
+ reps.addEventListener('change',()=>{if(reps.value.trim()!==''&&kg.value.trim()!==''&&!reps.disabled&&Number.isInteger(Number(reps.value))&&Number(reps.value)>0){restartRest(name,index)}});
+ reps.addEventListener('keydown',e=>{if(e.key==='Enter'){reps.blur()}});
+ const key=el('sessionDate').value+'::'+name+'::'+index;
+ function save(){
+  const date=el('sessionDate').value,weight=Number(kg.value),r=Number(reps.value);
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||kg.value.trim()===''||reps.value.trim()===''||!Number.isFinite(weight)||weight<0||weight>2000||!Number.isInteger(r)||r<1||r>1000){el('sessionMessage').textContent='Bitte Gewicht und Wiederholungen für diesen Satz eingeben.';return false}
+  if(sessionDraft[key]||data.sets.some(s=>s.exercise===name&&s.date===date&&s.setNumber===index+1)){el('sessionMessage').textContent='Dieser Satz wurde bereits gespeichert.';return true}
+  const entry={id:globalThis.crypto?.randomUUID?.()||String(Date.now())+Math.random(),exercise:name,date,weight,reps:r,setNumber:index+1};if(rir.value!=='')entry.rir=Number(rir.value);data.sets.push(entry);
+  if(!persist()){data.sets.pop();return false}
+  sessionDraft[key]=true;kg.disabled=true;reps.disabled=true;rir.disabled=true;el('sessionMessage').textContent=name+' · Satz '+(index+1)+' gespeichert.';
+  renderHistory();renderChart();renderCalendar();renderRecords();return true;
+ }
+ cancel.addEventListener('click',()=>{if(kg.disabled||reps.disabled)return;kg.value='';reps.value='';rir.value='';kg.dispatchEvent(new Event('input'));const state=exerciseRest.get(name);if(state&&state.running){state.running=false;state.elapsed=0;state.info.textContent='Abgebrochen';if(activeRestExercise===name)activeRestExercise=null;paintRest()}el('sessionMessage').textContent='Eingabe für '+name+' · Satz '+(index+1)+' verworfen. Übung bleibt im Plan.'});
+ row.append(number,kg,reps,rir,cancel);const wrapper=document.createElement('div');wrapper.append(row);return {row:wrapper,save,inputs:[kg,reps]};
+}
+let sessionSavers=[];let sessionCommentSavers=[];let sessionRows=[];
+function commentKey(date,name){return JSON.stringify([date,name])}
+function previousComment(name,day){
+ const dates=[...new Set([...data.sets.filter(s=>s.exercise===name&&s.date<day).map(s=>s.date),...Object.keys(data.comments).map(k=>{try{const [d,n]=JSON.parse(k);return n===name&&d<day?d:null}catch{return null}}).filter(Boolean)])].sort().reverse();
+ if(!dates.length)return null;
+ const text=data.comments[commentKey(dates[0],name)];return text?{date:dates[0],text}:null;
+}
+function renderSession(){
+ el('sessionPlanLabel').textContent={upper:'Oberkörper',lower:'Unterkörper',full:'Ganzkörper'}[activePlan()];
+ endWorkout(true);loadWorkout();
+ stopRest();exerciseRest.clear();
+ const target=el('sessionExercises');target.replaceChildren();sessionSavers=[];sessionCommentSavers=[];sessionRows=[];
+ const day=el('sessionDate').value;
+ plans[activePlan()].filter(name=>data.exercises.includes(name)&&eligible(name,activePlan())).forEach(name=>{
+  const previous=lastSessionSets(name,day).sort((a,b)=>(a.setNumber||0)-(b.setNumber||0));
+  const block=document.createElement('div');block.className='session-exercise';
+  const head=document.createElement('div');head.className='session-head';
+  const title=document.createElement('strong');title.textContent=name;
+  const add=document.createElement('button');add.className='secondary';add.style.width='auto';add.textContent='+ Satz';
+  const removeFromPlan=document.createElement('button');removeFromPlan.className='danger remove-from-plan-small';removeFromPlan.textContent='Aus Plan entfernen';
+  removeFromPlan.title='Übung nur aus diesem Trainingsplan entfernen; gespeicherte Leistungen bleiben erhalten';
+  removeFromPlan.addEventListener('click',()=>{
+    if(!confirm('\"'+name+'\" aus diesem Trainingsplan entfernen? Die Trainingshistorie bleibt erhalten.'))return;
+    const key=activePlan();plans[key]=plans[key].filter(x=>x!==name);
+    if(savePlans()){renderPlan();renderSession();el('sessionMessage').textContent=name+' aus dem Plan entfernt. Bisherige Trainingswerte bleiben erhalten.';}
+  });
+  const restBox=document.createElement('div');restBox.className='exercise-rest';
+  const restLabel=document.createElement('span');restLabel.className='tiny';restLabel.textContent='Satzpause';
+  const restClock=document.createElement('strong');restClock.textContent='00:00';
+  const restInfo=document.createElement('span');restInfo.className='tiny';restInfo.textContent='Bereit';
+  const restStop=document.createElement('button');restStop.type='button';restStop.className='secondary';restStop.textContent='Stopp';restStop.title='Laufende Satzpause abbrechen, ohne die Übung zu entfernen';restStop.setAttribute('aria-label','Satzpause für '+name+' stoppen');
+  restStop.addEventListener('click',()=>{const state=exerciseRest.get(name);if(!state)return;state.running=false;state.elapsed=0;state.info.textContent='Abgebrochen';if(activeRestExercise===name)activeRestExercise=null;paintRest()});
+  const restReset=document.createElement('button');restReset.type='button';restReset.className='secondary';restReset.textContent='↺';restReset.title='Satzpause zurücksetzen';restReset.setAttribute('aria-label','Satzpause für '+name+' zurücksetzen');
+  restReset.addEventListener('click',()=>{const state=exerciseRest.get(name);if(!state)return;state.running=false;state.elapsed=0;state.info.textContent='Zurückgesetzt';if(activeRestExercise===name)activeRestExercise=null;paintRest()});
+  restBox.append(restLabel,restClock,restInfo,restStop,restReset);
+  head.append(title,restBox,add,removeFromPlan);block.append(head);const completion=document.createElement('div');completion.className='exercise-completion';block.append(completion);
+  exerciseRest.set(name,{clock:restClock,info:restInfo,startedAt:0,elapsed:0,running:false});
+  
+  const labels=document.createElement('div');labels.className='set-row tiny';labels.innerHTML='<span>Satz</span><span>Gewicht (kg)</span><span>Wdh.</span><span>RIR</span><span>✕</span>';block.append(labels);
+  const rows=document.createElement('div');block.append(rows);
+  let count=0;
+  function addRow(){const obj=makeSessionRow(name,count,previous[count]);rows.append(obj.row);sessionSavers.push(obj.save);sessionRows.push(obj.inputs);obj.inputs.forEach(input=>input.addEventListener('input',updateCompletion));count++;updateCompletion()}
+  function updateCompletion(){const all=Array.from(rows.querySelectorAll('.set-row')).filter(row=>row.querySelector('input'));const completed=all.filter(row=>{const fields=row.querySelectorAll('input');return fields.length===2&&fields[0].value.trim()!==''&&fields[1].value.trim()!==''&&Number(fields[0].value)>=0&&Number(fields[1].value)>0}).length;const done=all.length>0&&completed===all.length;block.classList.toggle('is-complete',done);completion.textContent=(done?'✓ Übung abgeschlossen':completed+' von '+all.length+' Sätzen eingetragen');updateSessionProgress()}
+  const initial=2;for(let i=0;i<initial;i++)addRow();
+  const commentWrap=document.createElement('div');commentWrap.className='comment-box';
+  const prior=previousComment(name,day);
+  if(prior){const hint=document.createElement('div');hint.className='prior-comment';hint.textContent='Kommentar aus dem letzten Training ('+prior.date+'):\n'+prior.text;commentWrap.append(hint)}
+  const label=document.createElement('label');label.textContent='Kommentar zu '+name;
+  const note=document.createElement('textarea');note.placeholder='Optional: Technik, Belastung, Ziel fürs nächste Training …';note.value=data.comments[commentKey(day,name)]||'';
+  const saveNote=document.createElement('button');saveNote.className='secondary';saveNote.textContent='Kommentar speichern';
+  const status=document.createElement('span');status.className='tiny';status.style.marginLeft='8px';
+  function saveComment(){const key=commentKey(day,name),text=note.value.trim();if(text)data.comments[key]=text;else delete data.comments[key];if(persist()){status.textContent='Gespeichert';renderCalendar()}else status.textContent='Fehler beim Speichern'}
+  saveNote.addEventListener('click',saveComment);note.addEventListener('input',()=>{status.textContent='Noch nicht gespeichert'});
+  commentWrap.append(label,note,saveNote,status);block.append(commentWrap);
+  sessionCommentSavers.push(saveComment);
+  add.addEventListener('click',addRow);target.append(block);updateCompletion();
+ });
+ updateSessionProgress();
+}
+function updateSessionProgress(){const blocks=[...el('sessionExercises').querySelectorAll('.session-exercise')];const done=blocks.filter(b=>b.classList.contains('is-complete')).length;el('sessionProgress').textContent=blocks.length?`✓ ${done} von ${blocks.length} Übungen abgeschlossen`:'Noch keine Übungen im Trainingsplan. Bitte zuerst Übungen unter „Trainingsplan“ hinzufügen.'}
+el('refreshSession').addEventListener('click',()=>{if(confirm('Nicht gespeicherte Eingaben verwerfen und letzte Werte neu laden?')){Object.keys(sessionDraft).forEach(k=>delete sessionDraft[k]);renderSession()}});
+el('sessionDate').addEventListener('change',()=>{stopRest();Object.keys(sessionDraft).forEach(k=>delete sessionDraft[k]);renderSession()});
+el('saveSession').addEventListener('click',()=>{
+ let saved=0;
+ sessionSavers.forEach((save,i)=>{const inputs=sessionRows[i];if(inputs&&!inputs[0].disabled&&(inputs[0].value.trim()||inputs[1].value.trim())){if(save())saved++}});
+ sessionCommentSavers.forEach(fn=>fn());
+ el('sessionMessage').textContent=saved?saved+' Sätze gespeichert; Kommentare übernommen.':'Kommentare gespeichert; keine neuen vollständigen Sätze.';
+});
+
+// Kalender: vorhandene Satzdaten bleiben unverändert; ältere Daten ohne Satznummer
+// werden anhand der Speicherreihenfolge pro Übung und Datum angezeigt.
+let calendarMonth=new Date();calendarMonth.setDate(1);
+let calendarSelected=localDate();
+function calendarDates(){const result=new Set(data.sets.map(s=>s.date));for(const key of Object.keys(data.comments)){try{const [date]=JSON.parse(key);if(/^\d{4}-\d{2}-\d{2}$/.test(date))result.add(date)}catch{}}return result}
+function renderCalendar(){
+ const grid=el('calendarGrid');if(!grid)return;
+ const year=calendarMonth.getFullYear(),month=calendarMonth.getMonth();
+ el('calMonth').textContent=calendarMonth.toLocaleDateString('de-DE',{month:'long',year:'numeric'});
+ grid.replaceChildren();for(const d of ['Mo','Di','Mi','Do','Fr','Sa','So']){const x=document.createElement('div');x.className='weekday';x.textContent=d;grid.append(x)}
+ const offset=(new Date(year,month,1).getDay()+6)%7;
+ for(let i=0;i<offset;i++){const x=document.createElement('div');x.className='blank';grid.append(x)}
+ const dates=calendarDates();const count=new Date(year,month+1,0).getDate();
+ for(let n=1;n<=count;n++){
+  const date=`${year}-${String(month+1).padStart(2,'0')}-${String(n).padStart(2,'0')}`;
+  const b=document.createElement('button');b.textContent=n;b.type='button';
+  if(dates.has(date))b.classList.add('has-training');if(date===calendarSelected)b.classList.add('selected');
+  b.setAttribute('aria-label',new Date(year,month,n).toLocaleDateString('de-DE')+(dates.has(date)?', Training vorhanden':''));
+  b.addEventListener('click',()=>{calendarSelected=date;renderCalendar()});grid.append(b);
+ }
+ renderCalendarDetails();
+}
+function renderCalendarDetails(){
+ const box=el('calendarDetails');box.replaceChildren();
+ const date=calendarSelected;
+ const heading=document.createElement('h3');heading.textContent='Training vom '+date.split('-').reverse().join('.');box.append(heading);
+ const sets=data.sets.filter(s=>s.date===date);
+ const names=[...new Set([...sets.map(s=>s.exercise),...Object.keys(data.comments).map(k=>{try{const [d,n]=JSON.parse(k);return d===date?n:null}catch{return null}}).filter(Boolean)])];
+ if(!names.length){const p=document.createElement('p');p.className='muted';p.textContent='Für diesen Tag ist noch keine Trainingseinheit gespeichert. Du kannst Übungen nachtragen.';box.append(p)}
+ const edit=document.createElement('button');edit.type='button';edit.className='secondary';edit.textContent='✎ Training bearbeiten';box.append(edit);
+ const del=document.createElement('button');del.type='button';del.className='danger';del.textContent='Trainingstag vollständig löschen';
+ del.addEventListener('click',()=>{
+  if(!confirm('Training vom '+date.split('-').reverse().join('.')+' vollständig löschen? Alle Sätze und Kommentare dieses Tages werden dauerhaft entfernt.'))return;
+  const oldSets=data.sets,oldComments={...data.comments};data.sets=data.sets.filter(s=>s.date!==date);
+  for(const key of Object.keys(data.comments)){try{if(JSON.parse(key)[0]===date)delete data.comments[key]}catch{}}
+  if(!persist()){data.sets=oldSets;data.comments=oldComments;alert('Löschen fehlgeschlagen.');return}
+  for(const key of Object.keys(workoutTimes)){try{if(JSON.parse(key)[0]===date)delete workoutTimes[key]}catch{}}
+  try{localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(workoutTimes))}catch{}
+  Object.keys(sessionDraft).forEach(key=>delete sessionDraft[key]);renderHistory();renderChart();renderCalendar();renderRecords();renderSession();
+ });box.append(del);
+ const editor=document.createElement('div');editor.hidden=true;box.append(editor);
+ const sections=document.createElement('div');box.append(sections);
+ function showReadOnly(){sections.replaceChildren();for(const name of names){
+  const section=document.createElement('div');section.className='calendar-entry';const title=document.createElement('h3');title.textContent=name;section.append(title);
+  sets.filter(s=>s.exercise===name).sort((a,b)=>(a.setNumber||0)-(b.setNumber||0)).forEach((s,i)=>{const p=document.createElement('p');p.textContent='Satz '+(s.setNumber||i+1)+': '+s.weight+' kg × '+s.reps+' Wdh.'+(s.rir!==undefined?' · RIR '+(s.rir===4?'4+':s.rir):'');section.append(p)});
+  const note=data.comments[commentKey(date,name)];if(note){const p=document.createElement('div');p.className='prior-comment';p.textContent='Kommentar: '+note;section.append(p)}sections.append(section);
+ }}
+ showReadOnly();
+ edit.addEventListener('click',()=>{
+  editor.replaceChildren();editor.hidden=false;sections.hidden=true;edit.hidden=true;del.hidden=true;
+  const changes=[];const notes=[];const additions=[];
+  const subtitle=document.createElement('p');subtitle.className='muted';subtitle.textContent='Korrigiere gespeicherte Sätze und Kommentare. Alle Änderungen werden erst mit „Änderungen speichern“ übernommen.';editor.append(subtitle);
+  function field(type,value,label){const inp=document.createElement('input');inp.type=type;inp.value=value;inp.setAttribute('aria-label',label);return inp}
+  for(const name of names){const section=document.createElement('div');section.className='calendar-entry';const title=document.createElement('h3');title.textContent=name;section.append(title);
+   sets.filter(s=>s.exercise===name).sort((a,b)=>(a.setNumber||0)-(b.setNumber||0)).forEach((s,i)=>{
+    const row=document.createElement('div');row.className='grid';row.style.marginBottom='10px';
+    const kg=field('number',String(s.weight),name+' Satz '+(i+1)+' Gewicht');kg.min='0';kg.max='2000';kg.step='any';
+    const reps=field('number',String(s.reps),name+' Satz '+(i+1)+' Wiederholungen');reps.min='1';reps.max='1000';reps.step='1';
+    const rir=document.createElement('select');rir.setAttribute('aria-label',name+' Satz '+(i+1)+' RIR');for(const [v,t] of [['','RIR –'],['0','RIR 0'],['1','RIR 1'],['2','RIR 2'],['3','RIR 3'],['4','RIR 4+']]){const opt=document.createElement('option');opt.value=v;opt.textContent=t;rir.append(opt)}rir.value=s.rir===undefined?'':String(s.rir);
+    const lbl=document.createElement('div');lbl.className='tiny';lbl.textContent='Satz '+(s.setNumber||i+1)+' · Gewicht (kg) / Wiederholungen';section.append(lbl);row.append(kg,reps);section.append(row,rir);changes.push({s,kg,reps,rir});
+   });
+   const label=document.createElement('label');label.textContent='Kommentar';const textarea=document.createElement('textarea');textarea.className='edit-note';textarea.value=data.comments[commentKey(date,name)]||'';textarea.style.cssText='width:100%;min-height:70px;background:#0f172a;color:white;border:1px solid #475569;border-radius:8px;padding:10px';section.append(label,textarea);notes.push({name,textarea});editor.append(section);
+  }
+  const addSection=document.createElement('div');addSection.className='calendar-entry';
+  const addTitle=document.createElement('h3');addTitle.textContent='Übung nachträglich hinzufügen';addSection.append(addTitle);
+  const hint=document.createElement('p');hint.className='muted';hint.textContent='Nur für diesen Trainingstag – dein Trainingsplan bleibt unverändert.';addSection.append(hint);
+  const exerciseSelect=document.createElement('select');exerciseSelect.setAttribute('aria-label','Übung zum Trainingstag hinzufügen');
+  [...new Set([...data.exercises,...data.sets.map(s=>s.exercise)])].sort((a,b)=>a.localeCompare(b,'de')).forEach(name=>{const opt=document.createElement('option');opt.value=name;opt.textContent=name;exerciseSelect.append(opt)});
+  addSection.append(exerciseSelect);
+  const addButton=document.createElement('button');addButton.type='button';addButton.className='secondary';addButton.textContent='+ Übung nachtragen';addSection.append(addButton);
+  const addRows=document.createElement('div');addSection.append(addRows);editor.append(addSection);
+  addButton.addEventListener('click',()=>{
+   const name=exerciseSelect.value;if(!name)return;
+   const section=document.createElement('div');section.className='calendar-entry';
+   const heading=document.createElement('h3');heading.textContent=name;section.append(heading);
+   const inputs=[];
+   for(let i=0;i<2;i++){
+    const label=document.createElement('label');label.textContent='Satz '+(i+1)+' (optional, wenn nicht ausgeführt leer lassen)';section.append(label);
+    const row=document.createElement('div');row.className='grid';
+    const kg=field('number','',name+' Gewicht Satz '+(i+1));kg.placeholder='Gewicht (kg)';kg.min='0';kg.max='2000';kg.step='any';
+    const reps=field('number','',name+' Wiederholungen Satz '+(i+1));reps.placeholder='Wiederholungen';reps.min='1';reps.max='1000';reps.step='1';
+    row.append(kg,reps);section.append(row);
+    const rir=document.createElement('select');for(const [v,t] of [['','RIR –'],['0','RIR 0'],['1','RIR 1'],['2','RIR 2'],['3','RIR 3'],['4','RIR 4+']]){const opt=document.createElement('option');opt.value=v;opt.textContent=t;rir.append(opt)}section.append(rir);inputs.push({kg,reps,rir});
+   }
+   const remove=document.createElement('button');remove.type='button';remove.className='danger';remove.textContent='Nachtrag verwerfen';section.append(remove);
+   const addition={name,inputs,section};additions.push(addition);remove.addEventListener('click',()=>{additions.splice(additions.indexOf(addition),1);section.remove()});addRows.append(section);
+  });
+  const save=document.createElement('button');save.textContent='Änderungen speichern';const cancel=document.createElement('button');cancel.className='secondary';cancel.textContent='Abbrechen';editor.append(save,cancel);
+  cancel.addEventListener('click',()=>renderCalendarDetails());
+  save.addEventListener('click',()=>{
+   const values=[];for(const c of changes){const weight=Number(c.kg.value),reps=Number(c.reps.value);if(!c.kg.value.trim()||!c.reps.value.trim()||!Number.isFinite(weight)||weight<0||weight>2000||!Number.isInteger(reps)||reps<1||reps>1000){alert('Bitte gültige Gewichte und Wiederholungen für alle Sätze eingeben.');return}values.push({weight,reps,rir:c.rir.value})}
+   const newSets=[];
+   for(const addition of additions){
+    for(let i=0;i<addition.inputs.length;i++){
+     const {kg,reps,rir}=addition.inputs[i];if(!kg.value.trim()&&!reps.value.trim())continue;
+     const weight=Number(kg.value),count=Number(reps.value);
+     if(!kg.value.trim()||!reps.value.trim()||!Number.isFinite(weight)||weight<0||weight>2000||!Number.isInteger(count)||count<1||count>1000){alert('Bitte für nachgetragene Sätze gültige Gewichte und Wiederholungen eingeben.');return}
+     const existing=data.sets.filter(s=>s.date===date&&s.exercise===addition.name);
+     const pending=newSets.filter(s=>s.exercise===addition.name);
+     const number=Math.max(0,...existing.map(s=>s.setNumber||0),...pending.map(s=>s.setNumber||0))+1;
+     const entry={id:globalThis.crypto?.randomUUID?.()||String(Date.now())+Math.random(),date,exercise:addition.name,weight,reps:count,setNumber:number};
+     if(rir.value!=='')entry.rir=Number(rir.value);newSets.push(entry);
+    }
+   }
+   const previousSets=data.sets.map(s=>({...s})),previousComments={...data.comments};
+   changes.forEach((c,i)=>{c.s.weight=values[i].weight;c.s.reps=values[i].reps;if(values[i].rir==='')delete c.s.rir;else c.s.rir=Number(values[i].rir)});
+   notes.forEach(({name,textarea})=>{const key=commentKey(date,name),value=textarea.value.trim();if(value)data.comments[key]=value;else delete data.comments[key]});
+   data.sets.push(...newSets);
+   if(!persist()){data.sets=previousSets;data.comments=previousComments;alert('Speichern fehlgeschlagen.');return}
+   renderHistory();renderChart();renderRecords();renderCalendar();renderSession();
+  });
+ });
+}
+el('calPrev').addEventListener('click',()=>{calendarMonth.setMonth(calendarMonth.getMonth()-1);renderCalendar()});
+el('calNext').addEventListener('click',()=>{calendarMonth.setMonth(calendarMonth.getMonth()+1);renderCalendar()});
+
+
+function renderRecords(){
+ const select=el('recordExercise');if(!select)return;
+ const previous=select.value;
+ const names=[...new Set(data.exercises.filter(name=>!obsoleteExerciseNames.has(name)&&!data.hiddenExercises.includes(name)&&eligible(name,'full')&&(defaults.includes(name)||data.customExercises.some(item=>item.name===name))))];
+ select.replaceChildren();
+ for(const name of names){const option=document.createElement('option');option.value=name;option.textContent=name;select.append(option)}
+ if(names.includes(previous))select.value=previous;
+ renderRecordDetails();
+}
+function renderRecordDetails(){
+ const name=el('recordExercise').value,summary=el('recordSummary'),history=el('recordHistory');
+ summary.replaceChildren();history.replaceChildren();
+ const sets=data.sets.filter(s=>s.exercise===name&&Number.isFinite(s.weight)&&Number.isFinite(s.reps));
+ if(!sets.length){const msg=document.createElement('p');msg.className='muted';msg.textContent='Für diese Übung gibt es noch keine gespeicherten Sätze.';history.append(msg);return}
+ const metrics=[{label:'Höchstes Trainingsgewicht',value:s=>s.weight,unit:'kg'},{label:'Höchstes Satzvolumen',value:s=>s.weight*s.reps,unit:'kg'}];
+ for(const metric of metrics){
+  const best=Math.max(...sets.map(metric.value));
+  const winners=sets.filter(s=>Math.abs(metric.value(s)-best)<0.000001).sort((a,b)=>a.date.localeCompare(b.date));
+  const first=winners[0];
+  const card=document.createElement('div');card.className='record-card';
+  const label=document.createElement('div');label.className='muted';label.textContent=metric.label;
+  const val=document.createElement('strong');val.className='record-value';val.textContent=best.toLocaleString('de-DE',{maximumFractionDigits:2})+' '+metric.unit;
+  const detail=document.createElement('div');detail.className='tiny';detail.textContent=first.date.split('-').reverse().join('.')+' · '+first.weight+' kg × '+first.reps+' Wdh.';
+  card.append(label,val,detail);summary.append(card);
+  const block=document.createElement('div');block.className='calendar-entry';
+  const heading=document.createElement('h3');heading.textContent=metric.label;block.append(heading);
+  const sorted=[...sets].sort((a,b)=>a.date.localeCompare(b.date));
+  let running=-Infinity;const records=[];
+  for(const s of sorted){const v=metric.value(s);if(v>running+1e-9){records.push(s);running=v}}
+  records.reverse().forEach(s=>{const row=document.createElement('p');row.textContent=s.date.split('-').reverse().join('.')+' · '+metric.value(s).toLocaleString('de-DE',{maximumFractionDigits:2})+' kg ('+s.weight+' kg × '+s.reps+' Wdh.)';block.append(row)});
+  history.append(block);
+ }
+}
+el('recordExercise').addEventListener('change',renderRecordDetails);
+
+function renderCatalogManager(){
+ const select=el('catalogRemoveExercise'),old=select.value;
+ select.replaceChildren();
+ data.exercises.filter(name=>!data.hiddenExercises.includes(name)&&(defaults.includes(name)||data.customExercises.some(item=>item.name===name))).forEach(name=>{const option=document.createElement('option');option.value=name;option.textContent=name;select.append(option)});
+ if([...select.options].some(option=>option.value===old))select.value=old;
+ el('catalogRemoveButton').disabled=!select.options.length;
+ const list=el('hiddenExerciseList');list.replaceChildren();
+ if(!data.hiddenExercises.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='Keine ausgeblendeten Übungen.';list.append(empty)}
+ for(const name of data.hiddenExercises){const row=document.createElement('div');row.className='plan-item';const label=document.createElement('span');label.textContent=name;const button=document.createElement('button');button.className='secondary';button.textContent='Wiederherstellen';button.onclick=()=>{data.hiddenExercises=data.hiddenExercises.filter(x=>x!==name);persist();renderExercises();renderCatalogManager()};row.append(label,button);list.append(row)}
+}
+el('catalogRemoveButton').addEventListener('click',()=>{
+ const name=el('catalogRemoveExercise').value;if(!name)return;
+ if(!confirm('"'+name+'" aus der Übungsauswahl und allen Trainingsplänen entfernen? Alte Trainingsdaten bleiben erhalten.'))return;
+ data.hiddenExercises.push(name);
+ for(const key of ['full','upper','lower'])plans[key]=plans[key].filter(x=>x!==name);
+ savePlans();persist();renderExercises();renderCatalogManager();
+ el('customExerciseMessage').textContent='"'+name+'" wurde aus der Auswahl entfernt.';
+});
+function renderCustomExercises(){
+ const list=el('customExerciseList');list.replaceChildren();
+ if(!data.customExercises.length){const p=document.createElement('p');p.className='muted';p.textContent='Noch keine eigenen Übungen angelegt.';list.append(p);return}
+ data.customExercises.forEach(item=>{
+  const row=document.createElement('div');row.className='plan-item';
+  const name=document.createElement('span');name.textContent=item.name+' · '+(item.category==='upper'?'Oberkörper':'Unterkörper');
+  const btn=document.createElement('button');btn.className='danger';btn.textContent='Löschen';btn.title='Aus Katalog und Trainingsplänen entfernen; Historie bleibt erhalten';
+  btn.onclick=()=>{
+   if(!confirm('"'+item.name+'" aus dem Übungskatalog und allen Trainingsplänen entfernen? Gespeicherte Sätze bleiben erhalten.'))return;
+   data.customExercises=data.customExercises.filter(x=>x.name!==item.name);
+   // Übung für die historische Auswertung in data.exercises behalten, aber nicht mehr zur Planauswahl anbieten.
+   delete categories[item.name];for(const k of ['full','upper','lower'])plans[k]=plans[k].filter(n=>n!==item.name);
+   saveCategories();savePlans();persist();renderCustomExercises();renderExercises();renderCatalogManager();
+   el('customExerciseMessage').textContent='Übung aus dem Katalog entfernt. Trainingshistorie bleibt erhalten.';
+  };row.append(name,btn);list.append(row);
+ });
+}
+el('customExerciseAdd').addEventListener('click',()=>{
+ const name=el('customExerciseName').value.trim().replace(/\s+/g,' '),category=el('customExerciseCategory').value;
+ if(!name||name.length>70){el('customExerciseMessage').textContent='Bitte einen Namen mit maximal 70 Zeichen eingeben.';return}
+ if(data.exercises.some(x=>x.toLocaleLowerCase('de')===name.toLocaleLowerCase('de'))){el('customExerciseMessage').textContent='Diese Übung existiert bereits.';return}
+ data.customExercises.push({name,category});data.exercises.push(name);categories[name]=category;
+ if(!persist()){data.customExercises.pop();data.exercises.pop();delete categories[name];return}
+ saveCategories();el('customExerciseName').value='';el('customExerciseMessage').textContent='Übung hinzugefügt. Du kannst sie jetzt deinem Trainingsplan zuordnen.';
+ renderCustomExercises();renderExercises(name);renderCatalogManager();
+});
+const oldRenderExercises=renderExercises;
+renderExercises=function(selected){oldRenderExercises(selected);if(el('planExercises'))renderPlan();if(el('sessionExercises'))renderSession()};
+saveCategories();persist();renderExercises();renderCalendar();renderCustomExercises();renderCatalogManager();renderRecords();
+
+// Bereiche umschalten, ohne laufende Timer oder Satzeingaben neu aufzubauen.
+const menuToggle=el('menuToggle'),menuTabs=el('menuTabs');
+const pageTabs=Array.from(menuTabs.querySelectorAll('[role="tab"]'));
+function setMenuOpen(open){menuTabs.hidden=!open;menuToggle.setAttribute('aria-expanded',String(open));menuToggle.textContent=open?'✕ Menü schließen':'☰ Menü'}
+function syncProgressExercise(){const select=el('progressExercise');select.replaceChildren(...Array.from(el('exercise').options,option=>option.cloneNode(true)));select.value=el('exercise').value}
+function showPage(key,focus=false){
+ const tab=pageTabs.find(item=>item.dataset.page===key)||pageTabs[0];key=tab.dataset.page;
+ document.querySelectorAll('.app-page').forEach(page=>{page.hidden=page.id!=='page-'+key});
+ pageTabs.forEach(item=>{const selected=item===tab;item.setAttribute('aria-selected',String(selected));item.tabIndex=selected?0:-1});
+ el('activePageLabel').textContent=tab.textContent;setMenuOpen(false);
+ if(key==='progress'){syncProgressExercise();renderChart();renderRecords()}
+ if(focus){window.scrollTo(0,0);el('page-'+key).focus({preventScroll:true})}
+}
+menuToggle.addEventListener('click',()=>{const open=menuTabs.hidden;setMenuOpen(open);if(open)pageTabs.find(tab=>tab.getAttribute('aria-selected')==='true').focus()});
+pageTabs.forEach(tab=>tab.addEventListener('click',()=>showPage(tab.dataset.page,true)));
+menuTabs.addEventListener('keydown',event=>{
+ const current=pageTabs.indexOf(document.activeElement);let next=current;
+ if(event.key==='ArrowDown'||event.key==='ArrowRight')next=(current+1)%pageTabs.length;
+ else if(event.key==='ArrowUp'||event.key==='ArrowLeft')next=(current-1+pageTabs.length)%pageTabs.length;
+ else if(event.key==='Home')next=0;else if(event.key==='End')next=pageTabs.length-1;else return;
+ event.preventDefault();pageTabs[next].focus();
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!menuTabs.hidden){setMenuOpen(false);menuToggle.focus()}});
+document.addEventListener('click',event=>{if(!event.target.closest('.app-navigation'))setMenuOpen(false)});
+el('progressExercise').addEventListener('change',()=>{el('exercise').value=el('progressExercise').value;el('exercise').dispatchEvent(new Event('change'))});
+el('exercise').addEventListener('change',()=>{el('progressExercise').value=el('exercise').value});
+const hashPages={sessionCard:'training',calendarCard:'calendar',recordsCard:'progress',progressCard:'progress',customExerciseCard:'plan'};
+function showHashPage(){const configured=plans[activePlan()].some(name=>data.exercises.includes(name)&&eligible(name,activePlan()));showPage(hashPages[location.hash.slice(1)]||(configured?'training':'plan'))}
+window.addEventListener('hashchange',showHashPage);syncProgressExercise();showHashPage();
+// Bei einem neuen Kalendertag ein noch nicht absolviertes Training auf heute schieben.
+document.addEventListener('visibilitychange',()=>{if(document.hidden)return;const suggested=suggestedTrainingDate();if(el('sessionDate').value<suggested&&!(workoutState&&(workoutState.running||workoutState.paused))){el('sessionDate').value=suggested;renderSession()}});
+
+// V52: Aussehen getrennt von Trainingsdaten speichern (nicht im JSON-Backup).
+const THEME_KEY='fitness-progress-theme-v1';
+const themeSelect=el('themeSelect');
+function applyTheme(theme){
+ const selected=theme==='light'?'light':'dark';
+ document.documentElement.dataset.theme=selected;
+ document.documentElement.style.colorScheme=selected;
+ themeSelect.value=selected;
+ // Diagramme mit ihrer bestehenden Zeichenfunktion neu zeichnen.
+ if(typeof renderChart==='function')renderChart();
+}
+let savedTheme='dark';try{savedTheme=localStorage.getItem(THEME_KEY)||'dark'}catch{}
+applyTheme(savedTheme);
+themeSelect.addEventListener('change',()=>{
+ applyTheme(themeSelect.value);
+ try{localStorage.setItem(THEME_KEY,themeSelect.value)}catch{}
+});
+</script></body></html>
