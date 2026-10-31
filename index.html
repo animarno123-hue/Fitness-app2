@@ -101,10 +101,10 @@ html[data-theme="light"] #message{color:#15803d}
 </style>
 </head>
 <body><main class="wrap">
-<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 60 · Neue Übungen und Satzpausen-Automatik</p>
+<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 61 · Optionaler Armtag im Zweier-Split</p>
 <nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingsplan</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingsplan</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Trainingskalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt & Rekorde</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
-<div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2>🏋️ Nächstes Training · <span id="sessionPlanLabel"></span></h2><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div>Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="workoutEndBar" class="workout-bar"><button id="endWorkout" class="danger" disabled>■ Training beenden</button><div>Trainingszeit: <strong id="workoutBottomClock">00:00:00</strong></div></div><p id="workoutStatus" class="tiny" role="status"></p><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession">Alle ausgefüllten Sätze speichern</button></div><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
-<div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper- und Unterkörperplan erscheinen nur passende Übungen aus dem Katalog.</p><h3 id="planHeading">Übungen im Plan</h3><div id="planExercises"></div><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
+<div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2>🏋️ Nächstes Training · <span id="sessionPlanLabel"></span></h2><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div>Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="workoutEndBar" class="workout-bar"><button id="endWorkout" class="danger" disabled>■ Training beenden</button><div>Trainingszeit: <strong id="workoutBottomClock">00:00:00</strong></div></div><p id="workoutStatus" class="tiny" role="status"></p><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession">Alle ausgefüllten Sätze speichern</button></div><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
+<div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper-, Unterkörper- und Armplan erscheinen nur passende Übungen aus dem Katalog. Der Armtag ist optional und ändert nicht die normale Reihenfolge.</p><h3 id="planHeading">Übungen im Plan</h3><div id="planExercises"></div><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
 <details class="card" id="customExerciseCard"><summary class="fold-heading">Eigene Übungen verwalten <span class="fold-hint">Aufklappen</span></summary><div class="fold-body"><p class="muted">Erstelle eigene Übungen für Oberkörper oder Unterkörper. Sie erscheinen anschließend bei der Trainingsplan-Auswahl. Beim Löschen bleiben bisherige Trainingsleistungen im Verlauf erhalten.</p><label for="customExerciseName">Name der Übung</label><input id="customExerciseName" maxlength="70" placeholder="z. B. Seitheben Kurzhantel"><label for="customExerciseCategory">Kategorie</label><select id="customExerciseCategory"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><button id="customExerciseAdd">Eigene Übung hinzufügen</button><p id="customExerciseMessage" class="muted" role="status"></p><h3>Übungen aus der Auswahl entfernen</h3><p class="muted">Entfernt Übungen aus der Auswahl und allen zukünftigen Trainingsplänen. Bereits gespeicherte Trainingseinheiten und Rekorde bleiben erhalten.</p><label for="catalogRemoveExercise">Übung auswählen</label><select id="catalogRemoveExercise"></select><button id="catalogRemoveButton" class="danger">Aus Übungsauswahl entfernen</button><h3>Ausgeblendete Übungen</h3><div id="hiddenExerciseList"></div><h3>Meine eigenen Übungen</h3><div id="customExerciseList"></div></div></details></div>
 <div id="page-calendar" class="app-page" role="tabpanel" aria-labelledby="tab-calendar" tabindex="0" hidden><section class="card" id="calendarCard"><h2>📅 Trainingskalender</h2><p class="muted">Markierte Tage enthalten gespeicherte Sätze oder Kommentare. Tippe auf einen Tag, um die vollständige Einheit anzusehen.</p><div class="calendar-nav"><button id="calPrev" class="secondary" aria-label="Vorheriger Monat">◀</button><strong id="calMonth"></strong><button id="calNext" class="secondary" aria-label="Nächster Monat">▶</button></div><div id="calendarGrid" class="calendar-grid"></div><div id="calendarDetails"></div></section></div>
 <div id="page-progress" class="app-page" role="tabpanel" aria-labelledby="tab-progress" tabindex="0" hidden><section class="card" id="progressCard"><h2>Fortschritt</h2><label for="progressExercise">Übung auswählen</label><select id="progressExercise"></select><label for="metric">Auswertung</label><select id="metric"><option value="weight">Trainingsgewicht pro Satz (kg)</option><option value="reps">Wiederholungen pro Satz</option><option value="volume">2-Satz-Volumen (kg)</option></select><label for="period">Zeitraum</label><select id="period"><option value="all">Gesamter Zeitraum</option><option value="30">Letzte 30 Tage</option><option value="90">Letzte 90 Tage</option><option value="180">Letzte 180 Tage</option><option value="365">Letzte 365 Tage</option></select><div id="setToggles" class="grid" style="margin-top:12px"><label><input type="checkbox" id="show1" checked style="width:auto"> Satz 1</label><label><input type="checkbox" id="show2" checked style="width:auto"> Satz 2</label><label><input type="checkbox" id="show3" checked style="width:auto"> Satz 3</label></div><canvas id="chart" aria-label="Liniendiagramm der Trainingsentwicklung" role="img"></canvas><p id="chartInfo" class="muted"></p></section><details class="card" id="recordsAccordion"><summary class="fold-heading">🏆 Persönliche Rekorde <span class="fold-hint">Aufklappen</span></summary><section class="card" id="recordsCard"><h2>🏆 Persönliche Rekorde</h2><p class="muted">Bestwerte aus deinen tatsächlich gespeicherten Arbeitssätzen. Das Satzvolumen ist <strong>Gewicht × Wiederholungen eines einzelnen Satzes</strong> – nicht das 2-Satz-Volumen.</p><label for="recordExercise">Übung auswählen</label><select id="recordExercise"></select><div class="grid" id="recordSummary"></div><h3>Rekorde nach Kategorie</h3><div id="recordHistory"></div></section></details></div>
@@ -120,6 +120,8 @@ const upperCatalog=['Klimmzüge breit','Klimmzüge eng','Rudern am Seilzug breit
 const lowerCatalog=['Kniebeuge mit Langhantel','Kreuzheben rumänisch','Beinstrecker','Beinbeuger sitzend','Beinbeuger liegend','Wadenheben','Hip Thrusts','Ausfallschritte','Abduktion an der Maschine','Adduktion an der Maschine','Sit-up an der Negativbank','Hack Squat','Kreuzheben','Front Squat'];
 const sharedCatalog=['Rückenstrecker an der Maschine','Bauchpresse an der Maschine','Rotation vorgebeugt am Seilzug'];
 const defaults=[...upperCatalog,...lowerCatalog,...sharedCatalog];
+const armExerciseNames=new Set(upperCatalog.filter(name=>/curl|bizeps|trizeps|dips/i.test(name)));
+function isArmExercise(name){return armExerciseNames.has(name)||(/curl|bizeps|trizeps|dips|preacher|hammer/i.test(name)&&categoryOf(name)==='upper')}
 const CATEGORY_KEY='fitness-progress-categories-v5';
 let categories={};try{categories=JSON.parse(localStorage.getItem(CATEGORY_KEY))||{}}catch{}
 for(const name of upperCatalog)categories[name]='upper';
@@ -127,7 +129,7 @@ for(const name of lowerCatalog)categories[name]='lower';
 for(const name of sharedCatalog)categories[name]='both';
 function saveCategories(){localStorage.setItem(CATEGORY_KEY,JSON.stringify(categories))}
 function categoryOf(name){return categories[name]||null}
-function eligible(name,key){return name!=='Rotation am Seilzug'&&(key==='full'||categoryOf(name)===key||categoryOf(name)==='both')}
+function eligible(name,key){return name!=='Rotation am Seilzug'&&(key==='full'||(key==='arms'?isArmExercise(name):categoryOf(name)===key||categoryOf(name)==='both'))}
 
 let data;
 try{const stored=JSON.parse(localStorage.getItem(KEY));data=stored&&Array.isArray(stored.exercises)&&Array.isArray(stored.sets)?stored:{exercises:[...defaults],sets:[]};}catch{data={exercises:[...defaults],sets:[]};}
@@ -246,7 +248,7 @@ importAction.addEventListener('click',async()=>{
    imported.sets=imported.sets.filter(row=>!obsoleteExerciseNames.has(row.exercise));
    for(const name of defaults)if(!imported.exercises.includes(name))imported.exercises.push(name);
    localStorage.setItem(KEY,JSON.stringify(imported));
-   if(newPlans)localStorage.setItem(PLAN_KEY,JSON.stringify(Object.fromEntries(['full','upper','lower'].map(k=>[k,newPlans[k].filter(n=>!obsoleteExerciseNames.has(n)&&n!=='Rotation am Seilzug')]))));
+   if(newPlans)localStorage.setItem(PLAN_KEY,JSON.stringify(Object.fromEntries(['full','upper','lower','arms'].map(k=>[k,(newPlans[k]||[]).filter(n=>!obsoleteExerciseNames.has(n)&&n!=='Rotation am Seilzug')]))));
    if(newCategories)localStorage.setItem(CATEGORY_KEY,JSON.stringify({...categories,...newCategories}));
    if(newTimes)localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(newTimes));
    localStorage.removeItem(NEXT_CHOICE_KEY);
@@ -264,17 +266,23 @@ importAction.addEventListener('click',async()=>{
 const PLAN_KEY='fitness-progress-plans-v5';
 let plans;
 try{plans=JSON.parse(localStorage.getItem(PLAN_KEY));if(!plans||!Array.isArray(plans.full)||!Array.isArray(plans.upper)||!Array.isArray(plans.lower))throw Error('Invalid');}
-catch{plans={full:[],upper:[],lower:[]};}
-for(const key of ['full','upper','lower'])plans[key]=plans[key].filter(name=>!obsoleteExerciseNames.has(name));
-for(const key of ['full','upper','lower'])plans[key]=plans[key].filter(name=>name!=='Rotation am Seilzug');
+catch{plans={full:[],upper:[],lower:[],arms:[]};}
+if(!Array.isArray(plans.arms))plans.arms=[];
+for(const key of ['full','upper','lower','arms'])plans[key]=plans[key].filter(name=>!obsoleteExerciseNames.has(name));
+for(const key of ['full','upper','lower','arms'])plans[key]=plans[key].filter(name=>name!=='Rotation am Seilzug');
 function savePlans(){try{localStorage.setItem(PLAN_KEY,JSON.stringify(plans));return true}catch{el('planMessage').textContent='Trainingsplan konnte nicht gespeichert werden.';return false}}
 function activePlan(){return el('planSystem').value==='full'?'full':el('splitDay').value}
 function dayAfter(iso){const [y,m,d]=iso.split('-').map(Number);const next=new Date(y,m-1,d+1);return `${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,'0')}-${String(next.getDate()).padStart(2,'0')}`}
 function latestFinishedWorkout(){
  const today=localDate();
- return Object.entries(workoutTimes).filter(([id,value])=>{try{const [date,kind]=JSON.parse(id);return value&&value.finished&&date<=today&&['upper','lower','full'].includes(kind)}catch{return false}})
+ return Object.entries(workoutTimes).filter(([id,value])=>{try{const [date,kind]=JSON.parse(id);return value&&value.finished&&date<=today&&['upper','lower','arms','full'].includes(kind)}catch{return false}})
   .map(([id])=>({id,date:JSON.parse(id)[0],kind:JSON.parse(id)[1]}))
   .sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id)).at(-1)||null;
+}
+function latestFinishedCoreWorkout(){
+ const today=localDate();
+ return Object.entries(workoutTimes).filter(([id,value])=>{try{const [date,kind]=JSON.parse(id);return value&&value.finished&&date<=today&&['upper','lower'].includes(kind)}catch{return false}})
+ .map(([id])=>({id,date:JSON.parse(id)[0],kind:JSON.parse(id)[1]})).sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id)).at(-1)||null;
 }
 function suggestedTrainingDate(){
  const today=localDate(),last=latestFinishedWorkout();
@@ -287,9 +295,11 @@ function setNextChoice(kind){try{localStorage.setItem(NEXT_CHOICE_KEY,JSON.strin
 function chooseUpcomingSplit(){
  if(el('planSystem').value!=='split')return;
  const last=latestFinishedWorkout(),choice=getNextChoice();
- let next=last&&['upper','lower'].includes(last.kind)?(last.kind==='upper'?'lower':'upper'):data.nextSplitDay;
- if(choice&&choice.after===(last?.id||null)&&['upper','lower'].includes(choice.kind))next=choice.kind;
- if(!['upper','lower'].includes(next))next='upper';
+ const core=latestFinishedCoreWorkout();
+ let next=core?(core.kind==='upper'?'lower':'upper'):data.nextSplitDay;
+ if(last?.kind==='arms'&&data.nextSplitDay==='arms')next=core?(core.kind==='upper'?'lower':'upper'):'upper';
+ if(choice&&choice.after===(last?.id||null)&&['upper','lower','arms'].includes(choice.kind))next=choice.kind;
+ if(!['upper','lower','arms'].includes(next))next='upper';
  el('splitDay').value=next;data.nextSplitDay=next;
  syncTrainingSelector();
 }
@@ -298,7 +308,7 @@ function syncTrainingSelector(){el('sessionSplitChooser').hidden=el('planSystem'
 
 function renderPlan(){
  const isSplit=el('planSystem').value==='split';el('splitSelect').style.display=isSplit?'block':'none';
- const key=activePlan(),names={full:'Ganzkörper',upper:'Oberkörper',lower:'Unterkörper'};
+ const key=activePlan(),names={full:'Ganzkörper',upper:'Oberkörper',lower:'Unterkörper',arms:'Arme'};
  el('planHeading').textContent='Übungen: '+names[key];
  const box=el('planExercises');box.replaceChildren();
  plans[key].filter(x=>data.exercises.includes(x)&&eligible(x,key)).forEach((name,index)=>{
@@ -319,10 +329,10 @@ function renderPlan(){
 const SYSTEM_KEY='fitness-progress-selected-system-v6';
 try{el('planSystem').value=localStorage.getItem(SYSTEM_KEY)==='full'?'full':'split'}catch{el('planSystem').value='split'}
 el('planSystem').addEventListener('change',()=>{syncTrainingSelector();try{localStorage.setItem(SYSTEM_KEY,el('planSystem').value)}catch{}renderPlan();renderSession()});
-if(['upper','lower'].includes(data.nextSplitDay))el('splitDay').value=data.nextSplitDay;
+if(['upper','lower','arms'].includes(data.nextSplitDay))el('splitDay').value=data.nextSplitDay;
 el('splitDay').addEventListener('change',()=>{syncTrainingSelector();data.nextSplitDay=el('splitDay').value;setNextChoice(data.nextSplitDay);persist();renderPlan();renderSession()});
 el('planAddButton').addEventListener('click',()=>{const name=el('planAddExercise').value;if(!name)return;if(!eligible(name,activePlan()))return;plans[activePlan()].push(name);savePlans();renderPlan();renderSession()});
-el('sessionSplitDay').addEventListener('change',()=>{el('splitDay').value=el('sessionSplitDay').value;data.nextSplitDay=el('splitDay').value;setNextChoice(data.nextSplitDay);if(!persist())return;Object.keys(sessionDraft).forEach(k=>delete sessionDraft[k]);renderPlan();renderSession();el('sessionMessage').textContent='Nächste Trainingseinheit gespeichert: '+(el('splitDay').value==='upper'?'Oberkörper':'Unterkörper')+'.'});
+el('sessionSplitDay').addEventListener('change',()=>{el('splitDay').value=el('sessionSplitDay').value;data.nextSplitDay=el('splitDay').value;setNextChoice(data.nextSplitDay);if(!persist())return;Object.keys(sessionDraft).forEach(k=>delete sessionDraft[k]);renderPlan();renderSession();el('sessionMessage').textContent='Nächste Trainingseinheit gespeichert: '+({upper:'Oberkörper',lower:'Unterkörper',arms:'Arme'}[el('splitDay').value])+'.'});
 syncTrainingSelector();
 // Trainingsmodus: alle Übungen und einzelne Sätze mit letzten Werten.
 const sessionDraft={};
@@ -483,7 +493,8 @@ function finishWorkoutAndSelectNext(){
  sessionCommentSavers.forEach(save=>save());
  const finishedPlan=JSON.parse(workoutCurrentId||workoutId())[1];
  const duration=formatWorkout(workoutSeconds());
- const next=finishedPlan==='upper'?'lower':finishedPlan==='lower'?'upper':null;
+ const core=latestFinishedCoreWorkout();
+ const next=finishedPlan==='upper'?'lower':finishedPlan==='lower'?'upper':finishedPlan==='arms'?(core?(core.kind==='upper'?'lower':'upper'):'upper'):null;
  if(next){
   const previous=data.nextSplitDay;data.nextSplitDay=next;
   if(!persist()){data.nextSplitDay=previous;el('sessionMessage').textContent='Die nächste Einheit konnte nicht gespeichert werden. Bitte erneut versuchen.';return}
@@ -497,7 +508,7 @@ function finishWorkoutAndSelectNext(){
   el('sessionDate').value=dayAfter(el('sessionDate').value);
   Object.keys(sessionDraft).forEach(key=>delete sessionDraft[key]);
   renderPlan();renderSession();
-  el('workoutStatus').textContent=(finishedPlan==='upper'?'Oberkörper':'Unterkörper')+' beendet · Dauer: '+duration+'. Nächstes Training: '+(next==='upper'?'Oberkörper':'Unterkörper')+'.';
+  el('workoutStatus').textContent=({upper:'Oberkörper',lower:'Unterkörper',arms:'Arme'}[finishedPlan])+' beendet · Dauer: '+duration+'. Nächstes Training: '+(next==='upper'?'Oberkörper':'Unterkörper')+'.';
  }else{el('sessionDate').value=dayAfter(el('sessionDate').value);renderSession();el('workoutStatus').textContent='Ganzkörper beendet · Dauer: '+duration+'. Nächstes Training: Ganzkörper.'}
  el('sessionMessage').textContent='Training abgeschlossen. Sätze und Kommentare gespeichert. JSON-Backup wird heruntergeladen (sofern vom Browser erlaubt).';
  downloadBackup();
@@ -560,7 +571,7 @@ function previousComment(name,day){
 }
 function renderSession(){
   flushDraft();
- el('sessionPlanLabel').textContent={upper:'Oberkörper',lower:'Unterkörper',full:'Ganzkörper'}[activePlan()];
+ el('sessionPlanLabel').textContent={upper:'Oberkörper',lower:'Unterkörper',arms:'Arme',full:'Ganzkörper'}[activePlan()];
  if(workoutCurrentId!==workoutId())endWorkout(true);loadWorkout();
  exerciseRest.clear();activeRestExercise=null;
  const target=el('sessionExercises');target.replaceChildren();sessionSavers=[];sessionCommentSavers=[];sessionRows=[];
@@ -799,7 +810,7 @@ el('catalogRemoveButton').addEventListener('click',()=>{
  const name=el('catalogRemoveExercise').value;if(!name)return;
  if(!confirm('"'+name+'" aus der Übungsauswahl und allen Trainingsplänen entfernen? Alte Trainingsdaten bleiben erhalten.'))return;
  data.hiddenExercises.push(name);
- for(const key of ['full','upper','lower'])plans[key]=plans[key].filter(x=>x!==name);
+ for(const key of ['full','upper','lower','arms'])plans[key]=plans[key].filter(x=>x!==name);
  savePlans();persist();renderExercises();renderCatalogManager();
  el('customExerciseMessage').textContent='"'+name+'" wurde aus der Auswahl entfernt.';
 });
@@ -814,7 +825,7 @@ function renderCustomExercises(){
    if(!confirm('"'+item.name+'" aus dem Übungskatalog und allen Trainingsplänen entfernen? Gespeicherte Sätze bleiben erhalten.'))return;
    data.customExercises=data.customExercises.filter(x=>x.name!==item.name);
    // Übung für die historische Auswertung in data.exercises behalten, aber nicht mehr zur Planauswahl anbieten.
-   delete categories[item.name];for(const k of ['full','upper','lower'])plans[k]=plans[k].filter(n=>n!==item.name);
+   delete categories[item.name];for(const k of ['full','upper','lower','arms'])plans[k]=plans[k].filter(n=>n!==item.name);
    saveCategories();savePlans();persist();renderCustomExercises();renderExercises();renderCatalogManager();
    el('customExerciseMessage').textContent='Übung aus dem Katalog entfernt. Trainingshistorie bleibt erhalten.';
   };row.append(name,btn);list.append(row);
