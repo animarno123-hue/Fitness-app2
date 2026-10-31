@@ -1,5 +1,5 @@
-// V59: Aktualisierung des Offline-Caches; Trainingsdaten in localStorage bleiben unangetastet.
-const CACHE = 'fitness-app2-pwa-v59';
+// V60: Aktualisierung des Offline-Caches; Trainingsdaten in localStorage bleiben unangetastet.
+const CACHE = 'fitness-app2-pwa-v60';
 const FILES = ['./index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting()));

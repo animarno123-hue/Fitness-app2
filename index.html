@@ -101,7 +101,7 @@ html[data-theme="light"] #message{color:#15803d}
 </style>
 </head>
 <body><main class="wrap">
-<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 59 · Rudern Langhantel ergänzt</p>
+<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 60 · Neue Übungen und Satzpausen-Automatik</p>
 <nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingsplan</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingsplan</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Trainingskalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt & Rekorde</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
 <div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2>🏋️ Nächstes Training · <span id="sessionPlanLabel"></span></h2><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div>Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="workoutEndBar" class="workout-bar"><button id="endWorkout" class="danger" disabled>■ Training beenden</button><div>Trainingszeit: <strong id="workoutBottomClock">00:00:00</strong></div></div><p id="workoutStatus" class="tiny" role="status"></p><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession">Alle ausgefüllten Sätze speichern</button></div><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
 <div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper- und Unterkörperplan erscheinen nur passende Übungen aus dem Katalog.</p><h3 id="planHeading">Übungen im Plan</h3><div id="planExercises"></div><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
@@ -116,7 +116,7 @@ html[data-theme="light"] #message{color:#15803d}
 'use strict';
 const KEY='fitness-progress-v1';
 // Kommentare werden mit dem Trainingsdatum und Übungsnamen gespeichert.
-const upperCatalog=['Klimmzüge breit','Klimmzüge eng','Rudern am Seilzug breit','Rudern am Seilzug eng','Rudern Maschine','Rudern T-Bar','Rudern Kurzhantel','Rudern Langhantel','Hammer Curls','Dips','Brustpresse','Kurzhantel Bankdrücken','Kurzhantel Bankdrücken schräg','Preacher Curls Maschine','Preacher Curls','Langhantel Curls','Kurzhantel Curls','Trizeps drücken Seilzug','Shrugs Langhantel','Latzug breit','Latzug eng','Rotatorentraining am Seilzug','Schulterpresse','Schulterdrücken Langhantel','Seitheben Maschine','Seitheben Seilzug','Seitheben Kurzhantel'];
+const upperCatalog=['Klimmzüge breit','Klimmzüge eng','Rudern am Seilzug breit','Rudern am Seilzug eng','Rudern Maschine','Rudern T-Bar','Rudern Kurzhantel','Rudern Langhantel','Hammer Curls','Dips','Brustpresse','Kurzhantel Bankdrücken','Kurzhantel Bankdrücken schräg','Preacher Curls Maschine','Preacher Curls','Langhantel Curls','Kurzhantel Curls','Kurzhantel Curls Schrägbank','Trizeps drücken Kurzhanteln','Trizepsdrücken Seil über Kopf','Trizeps drücken Seilzug','Shrugs Langhantel','Latzug breit','Latzug eng','Rotatorentraining am Seilzug','Schulterpresse','Schulterdrücken Langhantel','Seitheben Maschine','Seitheben Seilzug','Seitheben Kurzhantel'];
 const lowerCatalog=['Kniebeuge mit Langhantel','Kreuzheben rumänisch','Beinstrecker','Beinbeuger sitzend','Beinbeuger liegend','Wadenheben','Hip Thrusts','Ausfallschritte','Abduktion an der Maschine','Adduktion an der Maschine','Sit-up an der Negativbank','Hack Squat','Kreuzheben','Front Squat'];
 const sharedCatalog=['Rückenstrecker an der Maschine','Bauchpresse an der Maschine','Rotation vorgebeugt am Seilzug'];
 const defaults=[...upperCatalog,...lowerCatalog,...sharedCatalog];
@@ -395,6 +395,24 @@ function restartRest(name,index){
  state.info.textContent='Nach Satz '+(index+1);
  activeRestExercise=name;paintRest();persistRest();
 }
+// Beim letzten ausgefüllten Satz einer Übung: eigene Uhr auf null,
+// Satzpausen-Uhr der folgenden Übung in der aktuellen Plan-Reihenfolge starten.
+function completeExerciseRest(name){
+ const current=exerciseRest.get(name);
+ if(current){current.running=false;current.startedAt=0;current.elapsed=0;current.info.textContent='Übung abgeschlossen'}
+ if(activeRestExercise===name)activeRestExercise=null;
+ const order=Array.from(exerciseRest.keys());
+ const nextName=order[order.indexOf(name)+1];
+ if(nextName){
+  const next=exerciseRest.get(nextName);
+  if(activeRestExercise&&activeRestExercise!==nextName){
+   const other=exerciseRest.get(activeRestExercise);
+   if(other&&other.running){other.elapsed=Date.now()-other.startedAt;other.running=false}
+  }
+  if(next){next.running=true;next.startedAt=Date.now();next.elapsed=0;next.info.textContent='Nach vorheriger Übung';activeRestExercise=nextName}
+ }
+ paintRest();persistRest();
+}
 function stopRest(){
  for(const state of exerciseRest.values()){if(state.running){state.elapsed=Date.now()-state.startedAt;state.running=false}}
  activeRestExercise=null;paintRest();persistRest();
@@ -511,7 +529,14 @@ function makeSessionRow(name,index,previous){
  const cancel=document.createElement('button');cancel.type='button';cancel.className='secondary';cancel.textContent='✕';cancel.title='Eingabe dieses Satzes verwerfen und Satzpause stoppen';cancel.setAttribute('aria-label',name+' Satz '+(index+1)+' Eingabe abbrechen');cancel.style.width='auto';cancel.style.padding='8px';
  // Ein abgeschlossener Wiederholungs-Eintrag markiert das Satzende.
  // 'change' feuert beim Verlassen des Feldes, nicht bei jeder Ziffer.
- reps.addEventListener('change',()=>{if(reps.value.trim()!==''&&kg.value.trim()!==''&&!reps.disabled&&Number.isInteger(Number(reps.value))&&Number(reps.value)>0){restartRest(name,index)}});
+ reps.addEventListener('change',()=>{
+  if(reps.value.trim()===''||kg.value.trim()===''||reps.disabled||!Number.isInteger(Number(reps.value))||Number(reps.value)<=0)return;
+  // Nur der letzte vorhandene Satz löst den Wechsel zur nächsten Übung aus.
+  const exerciseBlock=row.closest('.session-exercise');
+  const allRows=exerciseBlock?Array.from(exerciseBlock.querySelectorAll('.set-row')).filter(r=>r.querySelectorAll('input').length===2):[];
+  const isLast=index===allRows.length-1;
+  if(isLast)completeExerciseRest(name);else restartRest(name,index);
+ });
  reps.addEventListener('keydown',e=>{if(e.key==='Enter'){reps.blur()}});
  const key=el('sessionDate').value+'::'+name+'::'+index;
  function save(){
