@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#14191f">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 
@@ -109,16 +109,77 @@ html[data-theme="light"] #message{color:#15803d}
 .calendar-grid button.training-mixed{border:2px solid transparent!important;background:linear-gradient(#334155,#334155) padding-box,conic-gradient(#38bdf8 0 33%,#4ade80 33% 66%,#fde047 66% 100%) border-box!important;box-shadow:0 0 8px #64748b!important}
 .calendar-grid button.selected{outline:2px solid #f97316!important;outline-offset:3px}
 html[data-theme="light"] .calendar-grid button.training-mixed{background:linear-gradient(#e2e8f0,#e2e8f0) padding-box,conic-gradient(#0284c7 0 33%,#16a34a 33% 66%,#ca8a04 66% 100%) border-box!important}
+
+/* V70 DARK STEEL – reine Designschicht, keine Änderung an Trainingsdaten oder Logik */
+html:not([data-theme="light"]){color-scheme:dark;background:#0b0d10;color:#f0f2f5}
+html:not([data-theme="light"]) body{
+  color:#f0f2f5;min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% -15%,rgba(145,159,174,.18),transparent 56%),
+    repeating-linear-gradient(108deg,rgba(255,255,255,.014) 0px,rgba(255,255,255,.014) 1px,transparent 1px,transparent 5px),
+    linear-gradient(140deg,#191d23 0%,#0b0d10 45%,#171b20 100%);
+  background-attachment:fixed;
+}
+html:not([data-theme="light"]) .wrap{max-width:780px}
+html:not([data-theme="light"]) h1{font-size:clamp(1.55rem,5vw,2.05rem);letter-spacing:.025em;margin-bottom:4px;text-shadow:0 2px 12px #000b}
+html:not([data-theme="light"]) h2,html:not([data-theme="light"]) h3{color:#f3f5f7;letter-spacing:.015em}
+html:not([data-theme="light"]) .muted,html:not([data-theme="light"]) .tiny,html:not([data-theme="light"]) label,html:not([data-theme="light"]) .rir-note{color:#b2becb}
+html:not([data-theme="light"]) .card{
+  background:linear-gradient(148deg,rgba(49,56,65,.96) 0%,rgba(26,31,37,.98) 32%,rgba(18,22,27,.98) 100%);
+  border:1px solid #56616d;border-top-color:#87929c;border-bottom-color:#262d35;
+  border-radius:15px;box-shadow:0 8px 24px #0007,inset 0 1px 0 #ffffff14;
+}
+html:not([data-theme="light"]) .app-navigation{
+  background:linear-gradient(110deg,rgba(34,40,47,.98),rgba(12,15,19,.98) 60%,rgba(40,47,54,.98));
+  border:1px solid #4e5964;border-top-color:#8b97a1;border-radius:12px;padding:10px 12px;
+  box-shadow:0 4px 18px #0009,inset 0 1px 0 #ffffff1c;backdrop-filter:blur(12px)
+}
+html:not([data-theme="light"]) #activePageLabel{color:#eef2f6}
+html:not([data-theme="light"]) button,html:not([data-theme="light"]) .nav-link{
+  background:linear-gradient(180deg,#66717c 0%,#414a54 10%,#303841 55%,#242a31 100%);
+  color:#f6f8fa;border:1px solid #7d8995;border-bottom-color:#1b2026;
+  border-radius:9px;box-shadow:inset 0 1px 0 #ffffff3b,0 3px 7px #0006;
+  text-shadow:0 1px 1px #0009;transition:filter .16s ease,transform .16s ease,border-color .16s ease;
+}
+html:not([data-theme="light"]) button:hover,html:not([data-theme="light"]) .nav-link:hover{filter:brightness(1.13)}
+html:not([data-theme="light"]) button:active{transform:translateY(1px)}
+html:not([data-theme="light"]) button:focus-visible,html:not([data-theme="light"]) input:focus-visible,html:not([data-theme="light"]) select:focus-visible,html:not([data-theme="light"]) textarea:focus-visible{outline:2px solid #e8edf4;outline-offset:2px}
+html:not([data-theme="light"]) button.secondary,html:not([data-theme="light"]) .secondary{background:linear-gradient(180deg,#515d69,#303840 60%,#252c33);color:#f0f4f8}
+html:not([data-theme="light"]) button.danger,html:not([data-theme="light"]) #endWorkout{background:linear-gradient(180deg,#bd4545,#8c2429 55%,#58191e);border-color:#e56a6a;color:white}
+html:not([data-theme="light"]) #startWorkout{background:linear-gradient(180deg,#3eaf70,#167b44 55%,#10502e);border-color:#7ed7a3;color:white}
+html:not([data-theme="light"]) .menu-tabs button{background:linear-gradient(180deg,#424c56,#252c33);color:#f0f3f7;border:1px solid #66727d}
+html:not([data-theme="light"]) .menu-tabs button[aria-selected="true"]{background:linear-gradient(180deg,#6a7581,#38424d);border-color:#c4cbd3;box-shadow:inset 3px 0 #dbe3ec,0 2px 9px #0008}
+html:not([data-theme="light"]) input:not([type="checkbox"]),html:not([data-theme="light"]) select,html:not([data-theme="light"]) textarea,html:not([data-theme="light"]) .comment-box textarea{
+  background:linear-gradient(180deg,#10151a,#1a2129);color:#f7f9fb;border:1px solid #6a7784;
+  box-shadow:inset 0 2px 6px #0007,0 1px 0 #ffffff12;border-radius:8px;
+}
+html:not([data-theme="light"]) input::placeholder,html:not([data-theme="light"]) textarea::placeholder{color:#9eacb9}
+html:not([data-theme="light"]) #sessionExercises .session-exercise:nth-child(odd){background:linear-gradient(145deg,#313b45,#1b232b 62%,#151b21);border:1px solid #778490;border-top-color:#9aa5af;box-shadow:0 5px 17px #0008,inset 0 1px #ffffff16}
+html:not([data-theme="light"]) #sessionExercises .session-exercise:nth-child(even){background:linear-gradient(145deg,#3c454e,#27313b 65%,#202830);border:1px solid #7b8792;border-top-color:#a4adb6;box-shadow:0 5px 17px #0008,inset 0 1px #ffffff19}
+html:not([data-theme="light"]) #sessionExercises .session-exercise .session-head button.secondary{background:linear-gradient(180deg,#596572,#313b45);color:#f7f9fc;border:1px solid #a0abb6}
+html:not([data-theme="light"]) .session-exercise.is-complete{border-color:#52d18a!important;box-shadow:inset 4px 0 #23b769,0 5px 17px #0008!important}
+html:not([data-theme="light"]) .workout-bar,html:not([data-theme="light"]) .rest-timer,html:not([data-theme="light"]) .session-progress,html:not([data-theme="light"]) .exercise-rest,html:not([data-theme="light"]) .last-performance{
+  background:linear-gradient(140deg,#222b33,#111820);border:1px solid #667481;box-shadow:inset 0 1px #ffffff14,0 2px 7px #0005;color:#eaf0f5;
+}
+html:not([data-theme="light"]) .workout-bar strong{color:#6de7a2}
+html:not([data-theme="light"]) .record-card,html:not([data-theme="light"]) .prior-comment,html:not([data-theme="light"]) .calendar-entry{background:linear-gradient(145deg,#303a44,#202831);border:1px solid #62717d;color:#edf1f5}
+html:not([data-theme="light"]) .calendar-grid button{background:linear-gradient(145deg,#3b4650,#20272e);border:1px solid #5b6772;color:#fff;box-shadow:inset 0 1px #ffffff20}
+html:not([data-theme="light"]) .calendar-grid button.has-training{background:linear-gradient(145deg,#364653,#1d2c38);border-color:#8a9ba8}
+html:not([data-theme="light"]) .calendar-grid button.training-mixed{background:linear-gradient(#29333d,#29333d) padding-box,conic-gradient(#38bdf8 0 33%,#4ade80 33% 66%,#fde047 66% 100%) border-box!important}
+html:not([data-theme="light"]) .plan-item,html:not([data-theme="light"]) .entry{border-bottom-color:#55616b}
+html:not([data-theme="light"]) .comparison,html:not([data-theme="light"]) .done{color:#8be9ad}
+@media(prefers-reduced-motion:reduce){html:not([data-theme="light"]) button{transition:none}}
+
 </style>
 </head>
 <body><main class="wrap">
-<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 67 · Dreier-Split (Push-Pull-Legs)</p>
+<h1>🏋️ Fitness Progress Tracker</h1><p class="muted">Version 70 · Dreier-Split (Push-Pull-Legs)</p>
 <nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingsplan</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingsplan</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Trainingskalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt & Rekorde</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
 <div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2>🏋️ Nächstes Training · <span id="sessionPlanLabel"></span></h2><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option><option value="push">Push – Brust / Schultern / Trizeps</option><option value="pull">Pull – Rücken / Bizeps</option><option value="legs">Legs – Beine</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div>Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="workoutEndBar" class="workout-bar"><button id="endWorkout" class="danger" disabled>■ Training beenden</button><div>Trainingszeit: <strong id="workoutBottomClock">00:00:00</strong></div></div><p id="workoutStatus" class="tiny" role="status"></p><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession">Alle ausgefüllten Sätze speichern</button></div><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
 <div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option><option value="ppl">Dreier-Split (Push-Pull-Legs)</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option><option value="push">Push – Brust / Schultern / Trizeps</option><option value="pull">Pull – Rücken / Bizeps</option><option value="legs">Legs – Beine</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper-, Unterkörper- und Armplan erscheinen nur passende Übungen aus dem Katalog. Im Zweier-Split bleibt der Armtag optional. Der Dreier-Split (Push-Pull-Legs) hat drei eigenständige Pläne mit automatischer Reihenfolge.</p><h3 id="planHeading">Übungen im Plan</h3><div id="planExercises"></div><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
 <details class="card" id="customExerciseCard"><summary class="fold-heading">Eigene Übungen verwalten <span class="fold-hint">Aufklappen</span></summary><div class="fold-body"><p class="muted">Erstelle eigene Übungen für Oberkörper oder Unterkörper. Sie erscheinen anschließend bei der Trainingsplan-Auswahl. Beim Löschen bleiben bisherige Trainingsleistungen im Verlauf erhalten.</p><label for="customExerciseName">Name der Übung</label><input id="customExerciseName" maxlength="70" placeholder="z. B. Seitheben Kurzhantel"><label for="customExerciseCategory">Kategorie</label><select id="customExerciseCategory"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><button id="customExerciseAdd">Eigene Übung hinzufügen</button><p id="customExerciseMessage" class="muted" role="status"></p><h3>Übungen aus der Auswahl entfernen</h3><p class="muted">Entfernt Übungen aus der Auswahl und allen zukünftigen Trainingsplänen. Bereits gespeicherte Trainingseinheiten und Rekorde bleiben erhalten.</p><label for="catalogRemoveExercise">Übung auswählen</label><select id="catalogRemoveExercise"></select><button id="catalogRemoveButton" class="danger">Aus Übungsauswahl entfernen</button><h3>Ausgeblendete Übungen</h3><div id="hiddenExerciseList"></div><h3>Meine eigenen Übungen</h3><div id="customExerciseList"></div></div></details></div>
 <div id="page-calendar" class="app-page" role="tabpanel" aria-labelledby="tab-calendar" tabindex="0" hidden><section class="card" id="calendarCard"><h2>📅 Trainingskalender</h2><p class="muted">Trainierte Tage: Rot = Push, Grün = Pull und Oberkörper, Blau = Legs und Unterkörper, Gelb = Arme. Tippe auf einen Tag für die Details. Nicht eindeutig zuordenbare oder Ganzkörper-Einheiten bleiben neutral.</p><div class="calendar-nav"><button id="calPrev" class="secondary" aria-label="Vorheriger Monat">◀</button><strong id="calMonth"></strong><button id="calNext" class="secondary" aria-label="Nächster Monat">▶</button></div><div id="calendarGrid" class="calendar-grid"></div><div id="calendarDetails"></div></section></div>
-<div id="page-progress" class="app-page" role="tabpanel" aria-labelledby="tab-progress" tabindex="0" hidden><section class="card" id="progressCard"><h2>Fortschritt</h2><label for="progressExercise">Übung auswählen</label><select id="progressExercise"></select><label for="metric">Auswertung</label><select id="metric"><option value="weight">Trainingsgewicht pro Satz (kg)</option><option value="reps">Wiederholungen pro Satz</option><option value="volume">2-Satz-Volumen (kg)</option></select><label for="period">Zeitraum</label><select id="period"><option value="all">Gesamter Zeitraum</option><option value="30">Letzte 30 Tage</option><option value="90">Letzte 90 Tage</option><option value="180">Letzte 180 Tage</option><option value="365">Letzte 365 Tage</option></select><div id="setToggles" class="grid" style="margin-top:12px"><label><input type="checkbox" id="show1" checked style="width:auto"> Satz 1</label><label><input type="checkbox" id="show2" checked style="width:auto"> Satz 2</label><label><input type="checkbox" id="show3" checked style="width:auto"> Satz 3</label></div><canvas id="chart" aria-label="Liniendiagramm der Trainingsentwicklung" role="img"></canvas><p id="chartInfo" class="muted"></p></section><details class="card" id="recordsAccordion"><summary class="fold-heading">🏆 Persönliche Rekorde <span class="fold-hint">Aufklappen</span></summary><section class="card" id="recordsCard"><h2>🏆 Persönliche Rekorde</h2><p class="muted">Bestwerte aus deinen tatsächlich gespeicherten Arbeitssätzen. Das Satzvolumen ist <strong>Gewicht × Wiederholungen eines einzelnen Satzes</strong> – nicht das 2-Satz-Volumen.</p><label for="recordExercise">Übung auswählen</label><select id="recordExercise"></select><div class="grid" id="recordSummary"></div><h3>Rekorde nach Kategorie</h3><div id="recordHistory"></div></section></details></div>
+<div id="page-progress" class="app-page" role="tabpanel" aria-labelledby="tab-progress" tabindex="0" hidden><section class="card" id="progressCard"><h2>Fortschritt</h2><label for="progressExercise">Übung auswählen</label><select id="progressExercise"></select><label for="metric">Auswertung</label><select id="metric"><option value="weight">Trainingsgewicht pro Satz (kg)</option><option value="reps">Wiederholungen pro Satz</option><option value="volume">2-Satz-Volumen (kg)</option></select><label for="period">Zeitraum</label><select id="period"><option value="all">Gesamter Zeitraum</option><option value="30">Letzte 30 Tage</option><option value="90">Letzte 90 Tage</option><option value="180">Letzte 180 Tage</option><option value="365">Letzte 365 Tage</option></select><div id="setToggles" class="grid" style="margin-top:12px"><label><input type="checkbox" id="show1" checked style="width:auto"> Satz 1</label><label><input type="checkbox" id="show2" checked style="width:auto"> Satz 2</label><label><input type="checkbox" id="show3" checked style="width:auto"> Satz 3</label></div><canvas id="chart" aria-label="Liniendiagramm der Trainingsentwicklung" role="img"></canvas><p id="chartInfo" class="muted"></p></section><details class="card" id="recordsAccordion"><summary class="fold-heading">🏆 Persönliche Rekorde <span class="fold-hint">Aufklappen</span></summary><section class="card" id="recordsCard"><h2>🏆 Persönliche Rekorde</h2><p class="muted">Bestwerte aus deinen tatsächlich gespeicherten Arbeitssätzen. Das Satzvolumen ist <strong>Gewicht × Wiederholungen eines einzelnen Satzes</strong> – nicht das 2-Satz-Volumen.</p><label for="recordExercise">Übung auswählen</label><select id="recordExercise"></select><div class="grid" id="recordSummary"></div><h3>Rekorde nach Kategorie</h3><div id="recordHistory"></div></section></details><details class="card" id="trainingTimeAccordion"><summary class="fold-heading">⏱ Durchschnittliche Trainingszeit <span class="fold-hint">Aufklappen</span></summary><section class="card" id="trainingTimeCard"><h2>⏱ Durchschnittliche Trainingszeit</h2><p class="muted">Nur abgeschlossene Trainings unter 1:45:00 mit mindestens 5 unterschiedlichen Übungen zählen. Testeinheiten mit 4 oder weniger Übungen werden ausgeschlossen.</p><div id="trainingTimeSummary" aria-live="polite"></div></section></details></div>
 <div id="page-sets" hidden aria-hidden="true"><section class="card"><h2>Arbeitssatz erfassen</h2><label for="exercise">Übung</label><select id="exercise"></select><label for="date">Trainingsdatum</label><input id="date" type="date"><div class="grid"><div><label for="weight">Gewicht (kg)</label><input id="weight" type="number" min="0" step="0.5" inputmode="decimal" placeholder="100"></div><div><label for="reps">Wiederholungen</label><input id="reps" type="number" min="1" step="1" inputmode="numeric" placeholder="8"></div></div><label for="singleRir">RIR (optional)</label><select id="singleRir"><option value="">Nicht angegeben</option><option value="0">0 – Muskelversagen</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option></select><button id="saveSet">Satz speichern</button><p id="message" role="status"></p></section>
 <section class="card"><h2>Gespeicherte Sätze</h2><div id="history"></div></section></div>
 <div id="page-backup" class="app-page" role="tabpanel" aria-labelledby="tab-backup" tabindex="0" hidden><section class="card"><h2>⚙️ Einstellungen & Datensicherung</h2><label for="themeSelect">Darstellung</label><select id="themeSelect"><option value="dark">🌙 Dunkler Modus</option><option value="light">☀️ Heller Modus</option></select><p class="muted">Die Darstellung wird auf diesem Gerät gespeichert.</p><p class="muted">Die Daten liegen nur in diesem Browser. Nach „Training beenden“ wird automatisch ein JSON-Backup heruntergeladen, sofern dein Browser Downloads erlaubt. Sichere die Datei regelmäßig an einem sicheren Ort.</p><p id="backupStatus" class="tiny" role="status">Sicherungen enthalten auch Trainingspläne und Übungskatalog.</p><button id="export" class="secondary">Backup als JSON herunterladen</button><label for="import">Backup importieren (ersetzt vorhandene Daten)</label><input id="import" type="file" accept=".json,application/json"><button id="importAction" type="button" class="secondary">Ausgewählte JSON-Datei importieren</button><p id="importFeedback" role="status" aria-live="polite" class="muted">Bitte zuerst eine JSON-Backup-Datei auswählen.</p></section></div>
@@ -468,6 +529,37 @@ const WORKOUT_TIME_KEY='fitness-progress-workout-times-v1';
 let workoutTimes={};try{workoutTimes=JSON.parse(localStorage.getItem(WORKOUT_TIME_KEY))||{}}catch{}
 let workoutState=null;
 let workoutCurrentId=null;
+function renderTrainingTimeStats(){
+ const target=el('trainingTimeSummary');if(!target)return;
+ target.replaceChildren();
+ const labels={full:'Ganzkörper',upper:'Oberkörper',lower:'Unterkörper',arms:'Arme',push:'Push',pull:'Pull',legs:'Legs'};
+ const groups=Object.fromEntries(Object.keys(labels).map(key=>[key,[]]));
+ for(const [id,entry] of Object.entries(workoutTimes)){
+  let parsed;try{parsed=JSON.parse(id)}catch{continue}
+  if(!Array.isArray(parsed)||parsed.length!==2||!Object.hasOwn(groups,parsed[1]))continue;
+  if(!entry||entry.finished!==true||entry.running||entry.paused)continue;
+  // Bei neuen Einheiten wird die Übungsanzahl beim Beenden festgehalten.
+  // Für ältere Einheiten ohne Zähler: gespeicherte Übungen am Trainingstag zählen.
+  const distinctExercises=Number.isInteger(entry.completedExerciseCount)
+   ?entry.completedExerciseCount
+   :new Set(data.sets.filter(s=>s.date===parsed[0]&&s.exercise&&Number(s.reps)>0).map(s=>s.exercise)).size;
+  if(distinctExercises<=4)continue;
+  const ms=Number(entry.elapsedMs);
+  if(!Number.isFinite(ms)||ms<=0||ms>=105*60*1000)continue;
+  groups[parsed[1]].push(ms);
+ }
+ const all=Object.values(groups).flat();
+ const average=values=>formatWorkout(Math.round(values.reduce((sum,value)=>sum+value,0)/values.length/1000));
+ const row=(label,values)=>{
+  const item=document.createElement('div');item.className='entry';
+  const heading=document.createElement('strong');heading.textContent=label;
+  const value=document.createElement('div');value.textContent=values.length?average(values):'Noch keine gültigen Einheiten';
+  const count=document.createElement('span');count.className='tiny';count.textContent=values.length+' '+(values.length===1?'Einheit':'Einheiten')+' berücksichtigt';
+  item.append(heading,value,count);target.append(item);
+ };
+ row('Alle Trainingseinheiten',all);
+ for(const [key,label] of Object.entries(labels))row(label,groups[key]);
+}
 function workoutId(){return JSON.stringify([el('sessionDate').value,activePlan()])}
 function workoutSeconds(){if(!workoutState)return 0;return Math.floor(((workoutState.elapsedMs||0)+(workoutState.running?Date.now()-workoutState.startedAt:0))/1000)}
 function formatWorkout(sec){return [Math.floor(sec/3600),Math.floor(sec%3600/60),sec%60].map(n=>String(n).padStart(2,'0')).join(':')}
@@ -533,8 +625,18 @@ function finishWorkoutAndSelectNext(){
   const previous=data.nextSplitDay;data.nextSplitDay=next;
   if(!persist()){data.nextSplitDay=previous;el('sessionMessage').textContent='Die nächste Einheit konnte nicht gespeichert werden. Bitte erneut versuchen.';return}
  }
+ // Anzahl tatsächlich dokumentierter unterschiedlicher Übungen dieser Einheit sichern.
+ // Der Zähler wird an die abgeschlossene Trainingszeit gebunden.
+ const finishedWorkoutId=workoutCurrentId||workoutId();
+ const finishedDate=JSON.parse(finishedWorkoutId)[0];
+ const completedExerciseCount=new Set(data.sets.filter(s=>s.date===finishedDate&&s.exercise&&Number(s.reps)>0).map(s=>s.exercise)).size;
  const completedRestId=restSessionId();
- endWorkout();stopRest();clearRestForSession(completedRestId);
+ endWorkout();
+ if(workoutTimes[finishedWorkoutId]){
+  workoutTimes[finishedWorkoutId].completedExerciseCount=completedExerciseCount;
+  try{localStorage.setItem(WORKOUT_TIME_KEY,JSON.stringify(workoutTimes))}catch{}
+ }
+ stopRest();clearRestForSession(completedRestId);
  try{localStorage.removeItem(NEXT_CHOICE_KEY)}catch{}
  if(next){
   el('splitDay').value=next;
@@ -545,6 +647,7 @@ function finishWorkoutAndSelectNext(){
   el('workoutStatus').textContent=({upper:'Oberkörper',lower:'Unterkörper',arms:'Arme',push:'Push',pull:'Pull',legs:'Legs'}[finishedPlan])+' beendet · Dauer: '+duration+'. Nächstes Training: '+({upper:'Oberkörper',lower:'Unterkörper',push:'Push',pull:'Pull',legs:'Legs'}[next]||next)+'.';
  }else{el('sessionDate').value=dayAfter(el('sessionDate').value);renderSession();el('workoutStatus').textContent='Ganzkörper beendet · Dauer: '+duration+'. Nächstes Training: Ganzkörper.'}
  el('sessionMessage').textContent='Training abgeschlossen. Sätze und Kommentare gespeichert. JSON-Backup wird heruntergeladen (sofern vom Browser erlaubt).';
+ renderTrainingTimeStats();
  downloadBackup();
 }
 el('endWorkout').addEventListener('click',finishWorkoutAndSelectNext);
@@ -897,7 +1000,7 @@ el('customExerciseAdd').addEventListener('click',()=>{
 });
 const oldRenderExercises=renderExercises;
 renderExercises=function(selected){oldRenderExercises(selected);if(el('planExercises'))renderPlan();if(el('sessionExercises'))renderSession()};
-saveCategories();persist();renderExercises();renderCalendar();renderCustomExercises();renderCatalogManager();renderRecords();
+saveCategories();persist();renderExercises();renderCalendar();renderCustomExercises();renderCatalogManager();renderRecords();renderTrainingTimeStats();
 
 // Bereiche umschalten, ohne laufende Timer oder Satzeingaben neu aufzubauen.
 const menuToggle=el('menuToggle'),menuTabs=el('menuTabs');
@@ -909,7 +1012,7 @@ function showPage(key,focus=false){
  document.querySelectorAll('.app-page').forEach(page=>{page.hidden=page.id!=='page-'+key});
  pageTabs.forEach(item=>{const selected=item===tab;item.setAttribute('aria-selected',String(selected));item.tabIndex=selected?0:-1});
  el('activePageLabel').textContent=tab.textContent;setMenuOpen(false);
- if(key==='progress'){syncProgressExercise();renderChart();renderRecords()}
+ if(key==='progress'){syncProgressExercise();renderChart();renderRecords();renderTrainingTimeStats()}
  if(focus){window.scrollTo(0,0);el('page-'+key).focus({preventScroll:true})}
 }
 menuToggle.addEventListener('click',()=>{const open=menuTabs.hidden;setMenuOpen(open);if(open)pageTabs.find(tab=>tab.getAttribute('aria-selected')==='true').focus()});
