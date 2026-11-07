@@ -284,7 +284,7 @@ html[data-theme="light"] .v83-dialog p{color:#34465a}
 </style>
 </head>
 <body><main class="wrap">
-<h1>⚔️ Meisterleistung</h1><p class="muted">Version 83 · Dreier-Split (Push-Pull-Legs)</p>
+<h1>⚔️ Meisterleistung</h1><p class="muted">Version 84 · Dreier-Split (Push-Pull-Legs)</p>
 <nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingspläne</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingspläne</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Kalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
 <div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2 class="v71-training-heading">🏋️ <span id="sessionPlanLabel"></span> <span class="v71-training-subtitle">· Training</span></h2><div id="quickStart" class="v76-quick"><div class="v76-kicker">NÄCHSTES TRAINING</div><div class="v76-quick-line"><strong id="quickPlan">Training</strong><span id="quickCount"></span></div><button type="button" id="quickStartButton">▶ Training starten</button><button type="button" class="secondary v76-change" id="quickChange">Andere Einheit / Datum wählen</button></div><div id="sessionSetup" hidden><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option><option value="push">Push – Brust / Schultern / Trizeps</option><option value="pull">Pull – Rücken / Bizeps</option><option value="legs">Legs – Beine</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"></div><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div hidden aria-hidden="true">Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="v76Sticky" class="v76-sticky" hidden><div><small>TRAININGSZEIT</small><strong id="v76Total">00:00:00</strong></div><div class="v80-rest-control"><small>SATZPAUSE</small><strong id="v76Rest">00:00</strong><span class="v80-rest-actions"><button type="button" id="v80RestStop" class="secondary" title="Satzpause stoppen">■</button><button type="button" id="v80RestReset" class="secondary" title="Satzpause zurücksetzen">↺</button></span></div><div><small>FORTSCHRITT</small><strong id="v76Done">0/0</strong></div><button type="button" id="v76End" class="danger">Beenden</button></div><div id="workoutEndBar" class="workout-bar" hidden><button id="endWorkout" class="danger" disabled>■ Training beenden</button><strong id="workoutBottomClock" hidden>00:00:00</strong></div><p id="workoutStatus" class="tiny" role="status"></p><details class="session-tools"><summary>Weitere Trainingsoptionen</summary><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession" class="secondary">Ausgefüllte Sätze manuell speichern</button></div></details><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
 <div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option><option value="ppl">Dreier-Split (Push-Pull-Legs)</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option><option value="push">Push – Brust / Schultern / Trizeps</option><option value="pull">Pull – Rücken / Bizeps</option><option value="legs">Legs – Beine</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper-, Unterkörper- und Armplan erscheinen nur passende Übungen aus dem Katalog. Im Zweier-Split bleibt der Armtag optional. Der Dreier-Split (Push-Pull-Legs) hat drei eigenständige Pläne mit automatischer Reihenfolge.</p><div class="plan-edit-head"><h3 id="planHeading">Übungen im Plan</h3><button id="togglePlanEdit" type="button" class="secondary" aria-pressed="false">Plan bearbeiten</button></div><div id="planExercises"></div><label for="v76ExerciseSearch">Übung suchen</label><input id="v76ExerciseSearch" type="search" placeholder="Übungsname eingeben …" autocomplete="off"><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
@@ -557,9 +557,9 @@ function snapshotDraft(){
  const id=renderedDraftId||draftId(),entries={};
  el('sessionExercises').querySelectorAll('.session-exercise').forEach(block=>{
   const name=block.dataset.exercise,rows=[...block.querySelectorAll('.set-row')].filter(row=>row.querySelector('input'));
-  entries[name]={rows:rows.map(row=>{const fields=row.querySelectorAll('input');return {kg:fields[0].disabled?'':fields[0].value,reps:fields[1].disabled?'':fields[1].value,rir:row.querySelector('select')?.disabled?'':(row.querySelector('select')?.value||'')}}),comment:block.querySelector('textarea')?.value||''};
+  entries[name]={removed:[...block.querySelectorAll('.v84-removed-index')].map(n=>Number(n.dataset.index)),rows:rows.map(row=>{const fields=row.querySelectorAll('input');return {index:Number(row.dataset.setIndex),kg:fields[0].disabled?'':fields[0].value,reps:fields[1].disabled?'':fields[1].value,rir:row.querySelector('select')?.disabled?'':(row.querySelector('select')?.value||'')}}),comment:block.querySelector('textarea')?.value||''};
  });
- if(Object.values(entries).some(e=>e.comment||e.rows.some(r=>r.kg||r.reps||r.rir)))workoutDrafts[id]=entries;
+ if(Object.values(entries).some(e=>e.comment||e.removed.length||e.rows.some(r=>r.kg||r.reps||r.rir)))workoutDrafts[id]=entries;
  else delete workoutDrafts[id];
  persistDrafts();
 }
@@ -725,7 +725,7 @@ function finishWorkoutAndSelectNext(){
  // Vor dem Wechsel alle Eingaben sichern; unvollständige Sätze bleiben sichtbar.
  for(let i=0;i<sessionSavers.length;i++){
   const inputs=sessionRows[i];
-  if(inputs&&!inputs[0].disabled&&(inputs[0].value.trim()||inputs[1].value.trim())){
+  if(inputs&&inputs[0].isConnected&&!inputs[0].disabled&&(inputs[0].value.trim()||inputs[1].value.trim())){
    if(!sessionSavers[i]()){el('sessionMessage').textContent='Bitte unvollständige oder ungültige Sätze korrigieren oder mit ✕ verwerfen, bevor du das Training beendest.';return}
   }
  }
@@ -783,7 +783,7 @@ function previousPerformanceCard(previous,day){
  return panel;
 }
 function makeSessionRow(name,index,previous){
- const row=document.createElement('div');row.className='set-row';
+ const row=document.createElement('div');row.className='set-row';row.dataset.setIndex=String(index);
  const number=document.createElement('strong');number.textContent=String(index+1)+'.';
  const kg=document.createElement('input');kg.type='number';kg.min='0';kg.max='2000';kg.step='any';kg.inputMode='decimal';kg.placeholder=previous?String(previous.weight):'kg';kg.setAttribute('aria-label',name+' Satz '+(index+1)+' Gewicht');
  const reps=document.createElement('input');reps.type='number';reps.min='1';reps.max='1000';reps.step='1';reps.inputMode='numeric';reps.placeholder=previous?String(previous.reps):'Wdh.';reps.setAttribute('aria-label',name+' Satz '+(index+1)+' Wiederholungen');
@@ -797,7 +797,7 @@ function makeSessionRow(name,index,previous){
   // Nur der letzte vorhandene Satz löst den Wechsel zur nächsten Übung aus.
   const exerciseBlock=row.closest('.session-exercise');
   const allRows=exerciseBlock?Array.from(exerciseBlock.querySelectorAll('.set-row')).filter(r=>r.querySelectorAll('input').length===2):[];
-  const isLast=index===allRows.length-1;
+  const isLast=row===allRows[allRows.length-1];
   if(!isLast)restartRest(name,index);
  });
  rir.addEventListener('change',()=>{
@@ -805,7 +805,7 @@ function makeSessionRow(name,index,previous){
   if(!Number.isInteger(Number(reps.value))||Number(reps.value)<=0)return;
   const block=row.closest('.session-exercise');
   const all=block?[...block.querySelectorAll('.set-row')].filter(r=>r.querySelectorAll('input').length===2):[];
-  if(index===all.length-1&&all.every(r=>{
+  if(row===all[all.length-1]&&all.every(r=>{
    const f=r.querySelectorAll('input');return f[0].value.trim()!==''&&f[1].value.trim()!==''&&r.querySelector('select.rir-input')?.value!=='';
   }))completeExerciseRest(name);
  });
@@ -821,7 +821,22 @@ function makeSessionRow(name,index,previous){
   sessionDraft[key]=true;kg.disabled=true;reps.disabled=true;rir.disabled=true;el('sessionMessage').textContent=name+' · Satz '+(index+1)+' gespeichert.';snapshotDraft();
   renderHistory();renderChart();renderCalendar();renderRecords();return true;
  }
- cancel.addEventListener('click',()=>{if(kg.disabled||reps.disabled)return;kg.value='';reps.value='';rir.value='';kg.dispatchEvent(new Event('input'));const state=exerciseRest.get(name);if(state&&state.running){state.running=false;state.elapsed=0;state.info.textContent='Abgebrochen';if(activeRestExercise===name)activeRestExercise=null;paintRest();persistRest()}el('sessionMessage').textContent='Eingabe für '+name+' · Satz '+(index+1)+' verworfen. Übung bleibt im Plan.'});
+ cancel.addEventListener('click',()=>{
+  const block=row.closest('.session-exercise');if(!block)return;
+  const date=el('sessionDate').value;
+  const saved=data.sets.filter(s=>s.date===date&&s.exercise===name&&s.setNumber===index+1);
+  if(saved.length&&!confirm('Diesen bereits gespeicherten Satz dauerhaft aus der Trainingshistorie löschen?'))return;
+  if(saved.length){const backup=data.sets;data.sets=data.sets.filter(s=>!saved.includes(s));if(!persist()){data.sets=backup;return}}
+  delete sessionDraft[key];
+  const marker=document.createElement('span');marker.className='v84-removed-index';marker.dataset.index=String(index);marker.hidden=true;block.append(marker);
+  const wasLast=row===row.parentElement.querySelector('.set-row:last-child');
+  row.parentElement.remove();
+  const state=exerciseRest.get(name);
+  if(state&&state.running){state.running=false;state.elapsed=0;state.startedAt=0;state.info.textContent='Satz entfernt';if(activeRestExercise===name)activeRestExercise=null;paintRest();persistRest()}
+  block.dispatchEvent(new Event('v84-set-removed'));snapshotDraft();
+  renderHistory();renderChart();renderCalendar();renderRecords();
+  el('sessionMessage').textContent=name+' · Satz '+(index+1)+' entfernt.';
+ });
  row.append(number,kg,reps,rir,cancel);for(const field of [kg,reps,rir])field.addEventListener('input',()=>requestAnimationFrame(v76MarkRows));rir.addEventListener('change',()=>requestAnimationFrame(v76MarkRows));const wrapper=document.createElement('div');wrapper.append(row);return {row:wrapper,save,inputs:[kg,reps]};
 }
 let sessionSavers=[];let sessionCommentSavers=[];let sessionRows=[];
@@ -888,12 +903,16 @@ function renderSession(){
   const labels=document.createElement('div');labels.className='set-row tiny';labels.innerHTML='<span>Satz</span><span>Gewicht (kg)</span><span>Wdh.</span><span>RIR</span><span>✕</span>';body.append(labels);
   const rows=document.createElement('div');body.append(rows);
   let count=0;
-  function addRow(){const obj=makeSessionRow(name,count,previous[count]);rows.append(obj.row);sessionSavers.push(obj.save);sessionRows.push(obj.inputs);obj.inputs.forEach(input=>input.addEventListener('input',()=>{updateCompletion();snapshotDraft()}));obj.row.querySelector('select').addEventListener('change',snapshotDraft);count++;updateCompletion()}
+  function addRow(){while(block.querySelector('.v84-removed-index[data-index="'+count+'"]'))count++;const obj=makeSessionRow(name,count,previous[count]);rows.append(obj.row);sessionSavers.push(obj.save);sessionRows.push(obj.inputs);obj.inputs.forEach(input=>input.addEventListener('input',()=>{updateCompletion();snapshotDraft()}));obj.row.querySelector('select').addEventListener('change',snapshotDraft);count++;updateCompletion()}
   function updateCompletion(){const all=Array.from(rows.querySelectorAll('.set-row')).filter(row=>row.querySelector('input'));const completed=all.filter(row=>{const fields=row.querySelectorAll('input');return fields.length===2&&fields[0].value.trim()!==''&&fields[1].value.trim()!==''&&Number(fields[0].value)>=0&&Number(fields[1].value)>0&&row.querySelector('select.rir-input')?.value!==''}).length;const done=all.length>0&&completed===all.length;block.classList.toggle('is-complete',done);completion.textContent=(done?'✓ Übung abgeschlossen':completed+' von '+all.length+' Sätzen eingetragen');updateSessionProgress()}
   const draftEntry=currentDraft[name];
-   const initial=Math.max(2,Array.isArray(draftEntry?.rows)?draftEntry.rows.length:0);for(let i=0;i<initial;i++)addRow();
+  const removed=Array.isArray(draftEntry?.removed)?draftEntry.removed.filter(i=>Number.isInteger(i)&&i>=0&&i<100):[];
+  for(const index of removed){const marker=document.createElement('span');marker.className='v84-removed-index';marker.dataset.index=String(index);marker.hidden=true;block.append(marker)}
+  const hasDraft=!!draftEntry;
+  const initial=hasDraft?Math.max(0,Array.isArray(draftEntry.rows)?draftEntry.rows.length:0):2;
+  for(let i=0;i<initial;i++)addRow();
    if(Array.isArray(draftEntry?.rows))draftEntry.rows.forEach((saved,i)=>{
-    const row=rows.children[i]?.querySelector('.set-row');if(!row)return;
+    const row=[...rows.querySelectorAll('.set-row')].find(r=>Number(r.dataset.setIndex)===(Number.isInteger(saved.index)?saved.index:i));if(!row)return;
     const fields=row.querySelectorAll('input'),rir=row.querySelector('select');
     // Bereits endgültig gespeicherte Sätze nicht erneut als Entwurf anzeigen.
     if(data.sets.some(s=>s.date===day&&s.exercise===name&&s.setNumber===i+1))return;
@@ -911,13 +930,14 @@ function renderSession(){
   commentWrap.append(label,note,saveNote,status);optionsBody.append(commentWrap);
   sessionCommentSavers.push(saveComment);
   add.addEventListener('click',()=>{addRow();expandThis();options.open=false;snapshotDraft()});
+  block.addEventListener('v84-set-removed',()=>{updateCompletion();v76MarkRows()});
   rows.addEventListener('change',event=>{
     if(!event.target.matches('select.rir-input'))return;
     const all=[...rows.querySelectorAll('.set-row')].filter(r=>r.querySelectorAll('input').length===2);
     if(!all.length)return;
     const last=all[all.length-1];
     if(!last.contains(event.target)||event.target.value==='')return;
-    if(!block.classList.contains('is-complete'))return;
+    updateCompletion();if(!block.classList.contains('is-complete'))return;
     body.hidden=true;block.classList.remove('is-active');toggle.setAttribute('aria-expanded','false');toggle.textContent='▾';options.open=false;
     const next=block.nextElementSibling;
     if(next&&next.classList.contains('session-exercise')){
@@ -939,7 +959,7 @@ el('refreshSession').addEventListener('click',()=>{if(confirm('Nicht gespeichert
 el('sessionDate').addEventListener('change',()=>{stopRest();Object.keys(sessionDraft).forEach(k=>delete sessionDraft[k]);renderSession()});
 el('saveSession').addEventListener('click',()=>{
  let saved=0;
- sessionSavers.forEach((save,i)=>{const inputs=sessionRows[i];if(inputs&&!inputs[0].disabled&&(inputs[0].value.trim()||inputs[1].value.trim())){if(save())saved++}});
+ sessionSavers.forEach((save,i)=>{const inputs=sessionRows[i];if(inputs&&inputs[0].isConnected&&!inputs[0].disabled&&(inputs[0].value.trim()||inputs[1].value.trim())){if(save())saved++}});
  sessionCommentSavers.forEach(fn=>fn());
  el('sessionMessage').textContent=saved?saved+' Sätze gespeichert; Kommentare übernommen.':'Kommentare gespeichert; keine neuen vollständigen Sätze.';
 });
