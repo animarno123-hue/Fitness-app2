@@ -284,9 +284,9 @@ html[data-theme="light"] .v83-dialog p{color:#34465a}
 </style>
 </head>
 <body><main class="wrap">
-<h1>⚔️ Meisterleistung</h1><p class="muted">Version 84 · Dreier-Split (Push-Pull-Legs)</p>
+<h1>⚔️ Meisterleistung</h1><p class="muted">Version 86 · Dreier-Split (Push-Pull-Legs)</p>
 <nav class="app-navigation" aria-label="Hauptnavigation"><div class="menu-bar"><button id="menuToggle" type="button" aria-expanded="false" aria-controls="menuTabs">☰ Menü</button><span id="activePageLabel">📋 Trainingspläne</span></div><div id="menuTabs" class="menu-tabs" role="tablist" aria-label="Bereiche" aria-orientation="vertical" hidden><button type="button" id="tab-training" role="tab" aria-controls="page-training" aria-selected="false" tabindex="-1" data-page="training">🏋️ Training</button><button type="button" id="tab-plan" role="tab" aria-controls="page-plan" aria-selected="true" tabindex="0" data-page="plan">📋 Trainingspläne</button><button type="button" id="tab-calendar" role="tab" aria-controls="page-calendar" aria-selected="false" tabindex="-1" data-page="calendar">📅 Kalender</button><button type="button" id="tab-progress" role="tab" aria-controls="page-progress" aria-selected="false" tabindex="-1" data-page="progress">📈 Fortschritt</button><button type="button" id="tab-backup" role="tab" aria-controls="page-backup" aria-selected="false" tabindex="-1" data-page="backup">⚙️ Einstellungen</button></div></nav>
-<div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2 class="v71-training-heading">🏋️ <span id="sessionPlanLabel"></span> <span class="v71-training-subtitle">· Training</span></h2><div id="quickStart" class="v76-quick"><div class="v76-kicker">NÄCHSTES TRAINING</div><div class="v76-quick-line"><strong id="quickPlan">Training</strong><span id="quickCount"></span></div><button type="button" id="quickStartButton">▶ Training starten</button><button type="button" class="secondary v76-change" id="quickChange">Andere Einheit / Datum wählen</button></div><div id="sessionSetup" hidden><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option><option value="push">Push – Brust / Schultern / Trizeps</option><option value="pull">Pull – Rücken / Bizeps</option><option value="legs">Legs – Beine</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"></div><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Starte Training</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div hidden aria-hidden="true">Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="v76Sticky" class="v76-sticky" hidden><div><small>TRAININGSZEIT</small><strong id="v76Total">00:00:00</strong></div><div class="v80-rest-control"><small>SATZPAUSE</small><strong id="v76Rest">00:00</strong><span class="v80-rest-actions"><button type="button" id="v80RestStop" class="secondary" title="Satzpause stoppen">■</button><button type="button" id="v80RestReset" class="secondary" title="Satzpause zurücksetzen">↺</button></span></div><div><small>FORTSCHRITT</small><strong id="v76Done">0/0</strong></div><button type="button" id="v76End" class="danger">Beenden</button></div><div id="workoutEndBar" class="workout-bar" hidden><button id="endWorkout" class="danger" disabled>■ Training beenden</button><strong id="workoutBottomClock" hidden>00:00:00</strong></div><p id="workoutStatus" class="tiny" role="status"></p><details class="session-tools"><summary>Weitere Trainingsoptionen</summary><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession" class="secondary">Ausgefüllte Sätze manuell speichern</button></div></details><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
+<div id="page-training" class="app-page" role="tabpanel" aria-labelledby="tab-training" tabindex="0" hidden><section class="card" id="sessionCard"><h2 class="v71-training-heading">🏋️ <span id="sessionPlanLabel"></span> <span class="v71-training-subtitle">· Training</span></h2><div id="quickStart" class="v76-quick"><div class="v76-kicker">DEIN TRAINING</div><div class="v76-quick-line"><strong id="quickPlan">Training</strong><span id="quickCount"></span></div><button type="button" id="quickStartButton" hidden aria-hidden="true">▶ Training starten</button><button type="button" class="secondary v76-change" id="quickChange">Andere Einheit / Datum wählen</button></div><div id="sessionSetup" hidden><div id="sessionSplitChooser"><label for="sessionSplitDay">Nächste Trainingseinheit (frei wählbar)</label><select id="sessionSplitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option><option value="push">Push – Brust / Schultern / Trizeps</option><option value="pull">Pull – Rücken / Bizeps</option><option value="legs">Legs – Beine</option></select><p class="tiny">Die Auswahl wird gespeichert und beim nächsten Öffnen übernommen.</p></div><label for="sessionDate">Trainingstag</label><input type="date" id="sessionDate"></div><div id="workoutStartBar" class="workout-bar"><div class="workout-start-actions"><button id="startWorkout">▶ Trainingszeit starten</button><button id="pauseWorkout" type="button" class="secondary" disabled>⏸ Pause</button><button id="restartWorkout" class="secondary" type="button" disabled>↺ Neustart</button></div><div hidden aria-hidden="true">Trainingszeit: <strong id="workoutTopClock">00:00:00</strong></div></div><div id="sessionProgress" class="session-progress" role="status"></div><div id="sessionExercises"></div><div id="v76Sticky" class="v76-sticky" hidden><div><small>TRAININGSZEIT</small><strong id="v76Total">00:00:00</strong></div><div class="v80-rest-control"><small>SATZPAUSE</small><strong id="v76Rest">00:00</strong><span class="v80-rest-actions"><button type="button" id="v80RestStop" class="secondary" title="Satzpause stoppen">■</button><button type="button" id="v80RestReset" class="secondary" title="Satzpause zurücksetzen">↺</button></span></div><div><small>FORTSCHRITT</small><strong id="v76Done">0/0</strong></div><button type="button" id="v76End" class="danger">Beenden</button></div><div id="workoutEndBar" class="workout-bar" hidden><button id="endWorkout" class="danger" disabled>■ Training beenden</button><strong id="workoutBottomClock" hidden>00:00:00</strong></div><p id="workoutStatus" class="tiny" role="status"></p><details class="session-tools"><summary>Weitere Trainingsoptionen</summary><div class="session-actions"><button id="refreshSession" class="secondary">Letzte Werte neu laden</button><button id="saveSession" class="secondary">Ausgefüllte Sätze manuell speichern</button></div></details><p id="draftSaveStatus" class="tiny" role="status" aria-live="polite"></p><p id="sessionMessage" role="status" class="done"></p></section></div>
 <div id="page-plan" class="app-page" role="tabpanel" aria-labelledby="tab-plan" tabindex="0"><section class="card"><h2>📋 Trainingsplan auswählen</h2><label for="planSystem">Trainingssystem</label><select id="planSystem"><option value="split">2er-Split – Oberkörper / Unterkörper</option><option value="full">Ganzkörper – immer derselbe Plan</option><option value="ppl">Dreier-Split (Push-Pull-Legs)</option></select><div id="splitSelect"><label for="splitDay">Trainingseinheit</label><select id="splitDay"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option><option value="arms">Arme (optional)</option><option value="push">Push – Brust / Schultern / Trizeps</option><option value="pull">Pull – Rücken / Bizeps</option><option value="legs">Legs – Beine</option></select></div><p class="muted">Deine Trainingspläne bleiben gespeichert. Im Oberkörper-, Unterkörper- und Armplan erscheinen nur passende Übungen aus dem Katalog. Im Zweier-Split bleibt der Armtag optional. Der Dreier-Split (Push-Pull-Legs) hat drei eigenständige Pläne mit automatischer Reihenfolge.</p><div class="plan-edit-head"><h3 id="planHeading">Übungen im Plan</h3><button id="togglePlanEdit" type="button" class="secondary" aria-pressed="false">Plan bearbeiten</button></div><div id="planExercises"></div><label for="v76ExerciseSearch">Übung suchen</label><input id="v76ExerciseSearch" type="search" placeholder="Übungsname eingeben …" autocomplete="off"><label for="planAddExercise">Übung zum aktuellen Plan hinzufügen</label><select id="planAddExercise"></select><button id="planAddButton" class="secondary">Zum Plan hinzufügen</button><p id="planMessage" class="muted"></p></section>
 <details class="card" id="customExerciseCard"><summary class="fold-heading">Übungskatalog verwalten <span class="fold-hint">Aufklappen</span></summary><div class="fold-body"><p class="muted">Erstelle eigene Übungen für Oberkörper oder Unterkörper. Sie erscheinen anschließend bei der Trainingsplan-Auswahl. Beim Löschen bleiben bisherige Trainingsleistungen im Verlauf erhalten.</p><label for="customExerciseName">Name der Übung</label><input id="customExerciseName" maxlength="70" placeholder="z. B. Seitheben Kurzhantel"><label for="customExerciseCategory">Kategorie</label><select id="customExerciseCategory"><option value="upper">Oberkörper</option><option value="lower">Unterkörper</option></select><button id="customExerciseAdd">Eigene Übung hinzufügen</button><p id="customExerciseMessage" class="muted" role="status"></p><h3>Übungen aus der Auswahl entfernen</h3><p class="muted">Entfernt Übungen aus der Auswahl und allen zukünftigen Trainingsplänen. Bereits gespeicherte Trainingseinheiten und Rekorde bleiben erhalten.</p><label for="catalogRemoveExercise">Übung auswählen</label><select id="catalogRemoveExercise"></select><button id="catalogRemoveButton" class="danger">Aus Übungsauswahl entfernen</button><h3>Ausgeblendete Übungen</h3><div id="hiddenExerciseList"></div><h3>Meine eigenen Übungen</h3><div id="customExerciseList"></div></div></details></div>
 <div id="page-calendar" class="app-page" role="tabpanel" aria-labelledby="tab-calendar" tabindex="0" hidden><section class="card" id="calendarCard"><h2>📅 Trainingskalender</h2><p class="muted">Trainierte Tage: Rot = Push, Grün = Pull und Oberkörper, Blau = Legs und Unterkörper, Gelb = Arme. Tippe auf einen Tag für die Details. Nicht eindeutig zuordenbare oder Ganzkörper-Einheiten bleiben neutral.</p><div class="calendar-nav"><button id="calPrev" class="secondary" aria-label="Vorheriger Monat">◀</button><strong id="calMonth"></strong><button id="calNext" class="secondary" aria-label="Nächster Monat">▶</button></div><div id="calendarGrid" class="calendar-grid"></div><div id="calendarDetails"></div></section></div>
@@ -676,7 +676,21 @@ function renderTrainingTimeStats(){
 function workoutId(){return JSON.stringify([el('sessionDate').value,activePlan()])}
 function workoutSeconds(){if(!workoutState)return 0;return Math.floor(((workoutState.elapsedMs||0)+(workoutState.running?Date.now()-workoutState.startedAt:0))/1000)}
 function formatWorkout(sec){return [Math.floor(sec/3600),Math.floor(sec%3600/60),sec%60].map(n=>String(n).padStart(2,'0')).join(':')}
-function paintWorkout(){const sec=workoutSeconds();el('workoutTopClock').textContent=formatWorkout(sec);el('workoutBottomClock').textContent=formatWorkout(sec);el('startWorkout').disabled=!!(workoutState&&(workoutState.running||workoutState.paused));el('endWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('pauseWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('pauseWorkout').textContent=workoutState&&workoutState.paused?'▶ Fortsetzen':'⏸ Pause';el('restartWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('startWorkout').textContent=workoutState&&workoutState.elapsedMs>0&&!workoutState.running?'▶ Neues Training starten':'▶ Starte Training'}
+function paintWorkout(){const sec=workoutSeconds();el('workoutTopClock').textContent=formatWorkout(sec);el('workoutBottomClock').textContent=formatWorkout(sec);el('startWorkout').disabled=!!(workoutState&&(workoutState.running||workoutState.paused));el('endWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('pauseWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('pauseWorkout').textContent=workoutState&&workoutState.paused?'▶ Fortsetzen':'⏸ Pause';el('restartWorkout').disabled=!(workoutState&&(workoutState.running||workoutState.paused));el('startWorkout').textContent=workoutState&&workoutState.elapsedMs>0&&!workoutState.running?'▶ Trainingszeit neu starten':'▶ Trainingszeit starten'}
+// V85: Automatischer Trainingsbeginn beim ersten bestaetigten Arbeitssatz.
+// Respektiert laufende, pausierte und bereits abgeschlossene Zeitmessungen.
+function autoStartWorkoutOnFirstSet(){
+ const id=workoutId();
+ if(workoutCurrentId!==id)loadWorkout();
+ if(workoutState&&(workoutState.running||workoutState.paused))return;
+ // Eine bereits beendete Trainingseinheit nie versehentlich neu starten.
+ if(workoutState||workoutTimes[id])return;
+ workoutCurrentId=id;
+ workoutState={elapsedMs:0,startedAt:Date.now(),running:true,paused:false};
+ saveWorkout();paintWorkout();
+ el('workoutStatus').textContent='Trainingszeit automatisch mit dem ersten Satz gestartet.';
+ if(typeof v76SyncBar==='function')v76SyncBar();
+}
 function saveWorkout(){
  if(!workoutState)return;
  workoutTimes[workoutCurrentId||workoutId()]={elapsedMs:workoutState.elapsedMs||0,startedAt:workoutState.running?workoutState.startedAt:0,running:!!workoutState.running,paused:!!workoutState.paused,finished:!(workoutState.running||workoutState.paused)};
@@ -794,6 +808,7 @@ function makeSessionRow(name,index,previous){
  // 'change' feuert beim Verlassen des Feldes, nicht bei jeder Ziffer.
  reps.addEventListener('change',()=>{
   if(reps.value.trim()===''||kg.value.trim()===''||reps.disabled||!Number.isInteger(Number(reps.value))||Number(reps.value)<=0)return;
+  autoStartWorkoutOnFirstSet();
   // Nur der letzte vorhandene Satz löst den Wechsel zur nächsten Übung aus.
   const exerciseBlock=row.closest('.session-exercise');
   const allRows=exerciseBlock?Array.from(exerciseBlock.querySelectorAll('.set-row')).filter(r=>r.querySelectorAll('input').length===2):[];
@@ -828,8 +843,9 @@ function makeSessionRow(name,index,previous){
   if(saved.length&&!confirm('Diesen bereits gespeicherten Satz dauerhaft aus der Trainingshistorie löschen?'))return;
   if(saved.length){const backup=data.sets;data.sets=data.sets.filter(s=>!saved.includes(s));if(!persist()){data.sets=backup;return}}
   delete sessionDraft[key];
-  const marker=document.createElement('span');marker.className='v84-removed-index';marker.dataset.index=String(index);marker.hidden=true;block.append(marker);
-  const wasLast=row===row.parentElement.querySelector('.set-row:last-child');
+  if(!block.querySelector('.v84-removed-index[data-index="'+index+'"]')){
+    const marker=document.createElement('span');marker.className='v84-removed-index';marker.dataset.index=String(index);marker.hidden=true;block.append(marker);
+  }
   row.parentElement.remove();
   const state=exerciseRest.get(name);
   if(state&&state.running){state.running=false;state.elapsed=0;state.startedAt=0;state.info.textContent='Satz entfernt';if(activeRestExercise===name)activeRestExercise=null;paintRest();persistRest()}
@@ -909,15 +925,32 @@ function renderSession(){
   const removed=Array.isArray(draftEntry?.removed)?draftEntry.removed.filter(i=>Number.isInteger(i)&&i>=0&&i<100):[];
   for(const index of removed){const marker=document.createElement('span');marker.className='v84-removed-index';marker.dataset.index=String(index);marker.hidden=true;block.append(marker)}
   const hasDraft=!!draftEntry;
-  const initial=hasDraft?Math.max(0,Array.isArray(draftEntry.rows)?draftEntry.rows.length:0):2;
-  for(let i=0;i<initial;i++)addRow();
-   if(Array.isArray(draftEntry?.rows))draftEntry.rows.forEach((saved,i)=>{
+  const savedForDay=data.sets.filter(s=>s.date===day&&s.exercise===name&&Number.isInteger(s.setNumber)&&s.setNumber>0);
+  const draftRows=Array.isArray(draftEntry?.rows)?draftEntry.rows:[];
+  const targetIndexes=hasDraft?draftRows.map(r=>r.index).filter(Number.isInteger):[0,1];
+  // Bei älteren Daten ohne Entwurf müssen alle vorhandenen Sätze weiterhin sichtbar sein.
+  if(!hasDraft)savedForDay.forEach(record=>targetIndexes.push(record.setNumber-1));
+  const wanted=[...new Set(targetIndexes)].filter(i=>i>=0&&i<100&&!removed.includes(i)).sort((a,b)=>a-b);
+  for(const index of wanted){
+    count=index;addRow();
+  }
+  const restoreRows=hasDraft?draftRows:wanted.map(index=>({index}));
+  restoreRows.forEach((saved,i)=>{
     const row=[...rows.querySelectorAll('.set-row')].find(r=>Number(r.dataset.setIndex)===(Number.isInteger(saved.index)?saved.index:i));if(!row)return;
     const fields=row.querySelectorAll('input'),rir=row.querySelector('select');
-    // Bereits endgültig gespeicherte Sätze nicht erneut als Entwurf anzeigen.
-    if(data.sets.some(s=>s.date===day&&s.exercise===name&&s.setNumber===i+1))return;
-    fields[0].value=saved.kg||'';fields[1].value=saved.reps||'';rir.value=saved.rir||'';
+    // Gespeicherte Sätze sichtbar und geschützt wiederherstellen; ✕ bleibt verfügbar.
+    const index=Number.isInteger(saved.index)?saved.index:i;
+    const recorded=data.sets.find(s=>s.date===day&&s.exercise===name&&s.setNumber===index+1);
+    if(recorded){
+      fields[0].value=String(recorded.weight);fields[1].value=String(recorded.reps);
+      rir.value=recorded.rir===undefined?'':String(recorded.rir);
+      fields[0].disabled=true;fields[1].disabled=true;rir.disabled=true;
+      sessionDraft[day+'::'+name+'::'+index]=true;
+    }else{
+      fields[0].value=saved.kg??'';fields[1].value=saved.reps??'';rir.value=saved.rir??'';
+    }
    });
+  updateCompletion();
   const commentWrap=document.createElement('div');commentWrap.className='comment-box';
   const prior=previousComment(name,day);
   if(prior){const hint=document.createElement('div');hint.className='prior-comment';hint.textContent='Kommentar aus dem letzten Training ('+prior.date+'):\n'+prior.text;commentWrap.append(hint)}
@@ -1254,13 +1287,13 @@ function feedbackMessage(){
  const message=el('feedbackText').value.trim();
  if(!message){feedbackStatus.textContent='Bitte zuerst deine Nachricht eingeben.';el('feedbackText').focus();return null}
  const contact=el('feedbackContact').value.trim();
- return 'Feedback zum Fitness Progress Tracker (Version 76)\n'+'Kategorie: '+el('feedbackType').value+'\n\n'+message+(contact?'\n\nKontakt: '+contact:'');
+ return 'Feedback zu Meisterleistung (Version 86)\n'+'Kategorie: '+el('feedbackType').value+'\n\n'+message+(contact?'\n\nKontakt: '+contact:'');
 }
 async function copyFeedback(value){
  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value)}else{const field=el('feedbackText');field.focus();field.select();feedbackStatus.textContent='Automatisches Kopieren nicht verfügbar. Bitte Text markieren und kopieren.';return false}feedbackStatus.textContent='Feedback kopiert. Du kannst es jetzt per WhatsApp oder E-Mail verschicken.';return true}catch(e){feedbackStatus.textContent='Kopieren fehlgeschlagen. Bitte Text manuell markieren.';return false}
 }
 el('feedbackCopy').addEventListener('click',async()=>{const msg=feedbackMessage();if(msg)await copyFeedback(msg)});
-el('feedbackShare').addEventListener('click',async()=>{const msg=feedbackMessage();if(!msg)return;feedbackStatus.textContent='';if(navigator.share){try{await navigator.share({title:'Feedback zum Fitness Progress Tracker',text:msg});feedbackStatus.textContent='Teilen-Dialog abgeschlossen.'}catch(e){if(e.name!=='AbortError')await copyFeedback(msg)}}else await copyFeedback(msg)});
+el('feedbackShare').addEventListener('click',async()=>{const msg=feedbackMessage();if(!msg)return;feedbackStatus.textContent='';if(navigator.share){try{await navigator.share({title:'Feedback zu Meisterleistung',text:msg});feedbackStatus.textContent='Teilen-Dialog abgeschlossen.'}catch(e){if(e.name!=='AbortError')await copyFeedback(msg)}}else await copyFeedback(msg)});
 
 // V76: additive Oberfläche; alle bestehenden localStorage-Schlüssel und Datensätze bleiben unverändert.
 const V76_ONBOARD_KEY='fitness-progress-onboard-v76';
@@ -1304,7 +1337,7 @@ function v76SyncBar(){
  const trainingVisible=!el('page-training').hidden;
  v76Sticky.hidden=!trainingVisible;
  document.body.classList.toggle('v76-training-open',trainingVisible);
- el('v76Total').textContent=el('workoutTopClock').textContent;
+ el('v76Total').textContent=formatWorkout(workoutSeconds());
  const active=typeof activeRestExercise!=='undefined'?activeRestExercise:null;
  const state=active&&exerciseRest.get(active);
  el('v76Rest').textContent=state?.clock?.textContent||'00:00';
